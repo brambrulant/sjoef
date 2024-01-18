@@ -8,10 +8,6 @@ export const LogoutPage = () => {
     logout();
   });
 
-  return (
-    <div>
-      <h1>Logout</h1>
-    </div>
-  );
+  return null;
 };
 export default LogoutPage;

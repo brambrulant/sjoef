@@ -15,6 +15,7 @@ This template comes with the following features:
 ## Build and dev scripts
 
 - `dev` – start development server
+- `start` - start development server and api server
 - `build` – build production version of the app
 - `preview` – locally preview production build
 

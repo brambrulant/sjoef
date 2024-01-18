@@ -5,10 +5,12 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 
 import LoginPage from '@/pages/LoginPage';
 import HomePage from '@/pages/Homepage';
-import AboutPage from '@/pages/Aboutpage';
+import Eventpage from '@/pages/Eventpage';
 import KadaverPage from '@/pages/Kadaverpage';
 import BasicAppShell from '@/components/BasicAppShell';
 import LogoutPage from '@/pages/LogoutPage';
+import Adminpage from '@/pages/Adminpage';
+import EventDetailsPage from '@/pages/EventDetailsPage';
 
 export const Router: React.FC = () => {
   const router = createBrowserRouter([
@@ -25,10 +27,18 @@ export const Router: React.FC = () => {
           ),
         },
         {
-          path: '/about',
+          path: '/events',
           element: (
             <ProtectedRoute>
-              <AboutPage />
+              <Eventpage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: '/events/:id',
+          element: (
+            <ProtectedRoute>
+              <EventDetailsPage />
             </ProtectedRoute>
           ),
         },
@@ -37,6 +47,14 @@ export const Router: React.FC = () => {
           element: (
             <ProtectedRoute>
               <KadaverPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: '/admin',
+          element: (
+            <ProtectedRoute>
+              <Adminpage />
             </ProtectedRoute>
           ),
         },
@@ -51,14 +69,6 @@ export const Router: React.FC = () => {
         { path: '/login', element: <LoginPage /> },
         {
           path: '/*',
-          element: (
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: '',
           element: (
             <ProtectedRoute>
               <HomePage />

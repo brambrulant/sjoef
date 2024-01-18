@@ -10,8 +10,9 @@ export function Navbar() {
   const [active, setActive] = useState('Home');
   const menuItems = [
     { name: 'Home', path: '/home' },
-    { name: 'About', path: '/about' },
+    { name: 'Events', path: '/events' },
     { name: 'Kadaver', path: '/kadaver' },
+    { name: 'Admin', path: '/admin' },
     { name: 'Log out', path: '/logout' },
   ];
 

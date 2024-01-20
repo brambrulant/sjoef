@@ -10,7 +10,7 @@
         ]
       }
     },  {
-      "src": "src/index.html",
+      "src": "dist/index.html",
       "use": "@vercel/static-build",
       "config": {
         "includeFiles": [

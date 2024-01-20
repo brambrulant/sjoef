@@ -1,4 +1,6 @@
 {
+  "buildCommand": "tsc -p tsconfig.api.json && vercel dev",
+  ,
   "builds": [
     {
       "src": "api/dist/index.js",

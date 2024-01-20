@@ -1,5 +1,5 @@
 {
-  "buildCommand": "tsc -p tsconfig.api.json && vercel build",
+  "buildCommand": "tsc -p tsconfig.api.json && vite build",
   "builds": [
     {
       "src": "api/dist/index.js",

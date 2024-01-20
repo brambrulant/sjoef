@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Title, Container, Text } from '@mantine/core';
 import { format } from 'date-fns';
@@ -50,7 +50,7 @@ export default function Eventpage() {
       <Title>Events</Title>
       {events?.map((event: any) => (
         <div
-          className="flex flex-col p-8 m-4 bg-pink-700 cursor-pointer rounded-3xl hover:bg-pink-800 hover:shadow-none shadow-2xl transition-background-color duration-200 ease-in-out"
+          className="flex flex-col p-8 m-4 animate-gradient-x bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 cursor-pointer rounded-3xl hover:bg-pink-800 hover:shadow-none shadow-2xl transition-background-color duration-200 ease-in-out"
           onClick={() => handleClickEvent(event.id)}
           key={event.id}
         >

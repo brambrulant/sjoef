@@ -6,13 +6,15 @@ export const LoginPage: React.FC = () => {
   const { login, register, user, isAuthenticated, getToken } = useKindeAuth();
 
   const handleSignUp = React.useCallback(async () => {
-    await register();
+    const result = await register();
+    console.log('result', result);
   }, [register]);
 
   const handleSignIn = React.useCallback(
     async (e: any) => {
-      e.preventDefault();
-      await login({ app_state: { foo: 'bar' } });
+      console.log('login');
+      const result = await login({ app_state: { foo: 'bar' } });
+      console.log('result', result);
     },
     [login]
   );

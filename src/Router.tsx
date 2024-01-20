@@ -6,7 +6,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import LoginPage from '@/pages/LoginPage';
 import HomePage from '@/pages/Homepage';
 import Eventpage from '@/pages/Eventpage';
-import KadaverPage from '@/pages/Kadaverpage';
+import KadaverPage from '@/pages/DrankCardPage';
 import BasicAppShell from '@/components/BasicAppShell';
 import LogoutPage from '@/pages/LogoutPage';
 import Adminpage from '@/pages/Adminpage';
@@ -43,7 +43,7 @@ export const Router: React.FC = () => {
           ),
         },
         {
-          path: '/kadaver',
+          path: '/drank',
           element: (
             <ProtectedRoute>
               <KadaverPage />
@@ -68,7 +68,7 @@ export const Router: React.FC = () => {
         },
         { path: '/login', element: <LoginPage /> },
         {
-          path: '/*',
+          path: '/',
           element: (
             <ProtectedRoute>
               <HomePage />

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useQuery } from 'react-query';
-import { Container } from '@mantine/core';
+import { Container, Tabs } from '@mantine/core';
 import Loader from '@/components/Loader';
 import { Navigate } from 'react-router-dom';
 import useToken from '@/functions/useToken';
+import EventForm from '@/components/EventForm';
 
 export default function AdminPage() {
   const { token, isLoading: isAuthLoading, user } = useToken();
@@ -42,7 +43,23 @@ export default function AdminPage() {
 
   return (
     <Container p="md">
-      <div>{data ? JSON.stringify(data.message) + user.given_name : 'No data'}</div>
+      <Tabs variant="outline" defaultValue="events">
+        <Tabs.List>
+          <Tabs.Tab value="events" autoFocus>
+            Events
+          </Tabs.Tab>
+          <Tabs.Tab value="users">Users</Tabs.Tab>
+          <Tabs.Tab value="settings">Settings</Tabs.Tab>
+        </Tabs.List>
+
+        <Tabs.Panel value="events">
+          <EventForm token={token} />
+        </Tabs.Panel>
+
+        <Tabs.Panel value="users">Messages tab content</Tabs.Panel>
+
+        <Tabs.Panel value="settings">Settings tab content</Tabs.Panel>
+      </Tabs>
     </Container>
   );
 }

@@ -18,6 +18,14 @@ export const Events = pgTable('events', {
   is_sold_out: text('is_sold_out'),
 });
 
+export const Tickets = pgTable('tickets', {
+  id: serial('id').primaryKey(),
+  event_id: integer('event_id').references(() => Events.id),
+  user_id: text('user_id'),
+  created_at: timestamp('created_at'),
+  updated_at: timestamp('updated_at'),
+});
+
 export const Users = pgTable('users', {
   id: serial('id').primaryKey(),
   name: text('name'),
@@ -25,11 +33,9 @@ export const Users = pgTable('users', {
   created_at: timestamp('created_at'),
   updated_at: timestamp('updated_at'),
 });
-
-export const Tickets = pgTable('tickets', {
+export const ConsumptionPoints = pgTable('consumption_points', {
   id: serial('id').primaryKey(),
-  event_id: integer('event_id').references(() => Events.id),
-  user_id: text('user_id'),
-  created_at: timestamp('created_at'),
-  updated_at: timestamp('updated_at'),
+  user_id: text('user_id').references(() => Users.id),
+  total_points: integer('total_points'),
+  used_points: integer('used_points'),
 });

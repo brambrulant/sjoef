@@ -36,6 +36,9 @@ const kindeServerClient = createKindeServerClient(GrantType.AUTHORIZATION_CODE, 
 
 export async function authenticateToken(req: Request, res: Response, next: NextFunction) {
   try {
+    if (req.originalUrl === '/api/webhook') {
+      return next();
+    }
     const token = req.headers.authorization?.split(' ')[1]; // Assuming token is sent as a Bearer token
     if (!token) {
       return res.status(401).send('Access token is required');

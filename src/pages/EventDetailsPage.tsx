@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { Container, Title, Text } from '@mantine/core';
 import useToken from '@/functions/useToken';
 import Loader from '@/components/Loader';
-import CheckoutForm from '@/components/CheckoutForm';
+import TicketCheckoutForm from '@/components/CheckoutForm/TicketCheckoutForm';
 
 export default function EventDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +37,6 @@ export default function EventDetailsPage() {
   if (status === 'loading') return <div>Loading data...</div>;
   if (status === 'error') return <div>Error fetching data</div>;
 
-  console.log('event details page', event);
   return (
     <Container ta="center">
       <Title>event details</Title>
@@ -45,7 +44,7 @@ export default function EventDetailsPage() {
       <Text>{event[0]?.genre}</Text>
       <Text>{event[0]?.date}</Text>
       <div></div>
-      {event[0]?.price && <CheckoutForm />}
+      {event[0]?.price && <TicketCheckoutForm eventId={event[0]?.price} />}
     </Container>
   );
 }

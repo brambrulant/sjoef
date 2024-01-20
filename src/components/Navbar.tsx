@@ -11,7 +11,7 @@ export function Navbar() {
   const menuItems = [
     { name: 'Home', path: '/home' },
     { name: 'Events', path: '/events' },
-    { name: 'Kadaver', path: '/kadaver' },
+    { name: 'Drank', path: '/drank' },
     { name: 'Admin', path: '/admin' },
     { name: 'Log out', path: '/logout' },
   ];
@@ -28,7 +28,7 @@ export function Navbar() {
   }, [location.pathname]);
 
   return (
-    <Box bg={theme.colors.blue[9]}>
+    <Box className="bg-transparent">
       <Group justify="space-between" align="center" h={90} px="md">
         <Text>Jorams website</Text>
 
@@ -40,7 +40,6 @@ export function Navbar() {
               onClick={() => onClickNavLink(item.name)}
               style={{
                 backgroundColor: active === item.name ? theme.colors.blue[4] : '',
-                color: theme.colors.orange[4],
                 height: '100%',
                 display: 'flex',
                 alignItems: 'center',

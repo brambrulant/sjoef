@@ -1,5 +1,5 @@
 {
-  "buildCommand": "tsc -p tsconfig.api.json && vercel dev",
+  "buildCommand": "tsc -p tsconfig.api.json && vercel build",
   "builds": [
     {
       "src": "api/dist/index.js",
@@ -8,6 +8,15 @@
         "includeFiles": [
           "api/dist/**"
         ]
+      }
+    },  {
+      "src": "src/index.html",
+      "use": "@vercel/static-build",
+      "config": {
+        "includeFiles": [
+          "src/**"
+        ],
+        "buildCommand": "vite build"
       }
     }
   ],

@@ -8,6 +8,10 @@
           "api/dist/**"
         ]
       }
+    },
+    {
+      "src": "./dist/index.html",
+      "use": "@vercel/static"
     }
   ],
   "routes": [

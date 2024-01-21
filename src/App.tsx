@@ -20,7 +20,7 @@ export default function App() {
           isDangerouslyUseLocalStorage
           clientId="a6b9fb378282420bbfc9b59cd3abc1aa"
           domain="https://sjoef.kinde.com"
-          redirectUri={process.env.NODE_ENV === 'development' ? 'http://localhost:3000/home' : 'https://sjoef.vercel.app:3000/home'}
+          redirectUri={process.env.NODE_ENV === 'development' ? 'http://localhost:3000/home' : 'https://sjoef.vercel.app/home'}
           logoutUri={process.env.NODE_ENV === 'development' ? 'http://localhost:3000/login' : 'https://sjoef.vercel.app/login'}
         >
           <QueryClientProvider client={queryClient}>

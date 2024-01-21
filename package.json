@@ -2,6 +2,7 @@
   "name": "mantine-vite-template",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "start": " tsc -p tsconfig.api.json && vercel dev",

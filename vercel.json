@@ -8,10 +8,12 @@
           "api/dist/**"
         ]
       }
-    },
-    {
-      "src": "./dist/index.html",
-      "use": "@vercel/static"
+    }, {
+      "src": "dist/index.html",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "vite build"
+      }
     }
   ],
   "routes": [

@@ -12,6 +12,7 @@ import CustomLoader from '@/components/Loader';
 const queryClient = new QueryClient();
 
 export default function App() {
+  console.log('process.env.NODE_ENV', process.env.NODE_ENV);
   return (
     <MantineProvider theme={theme}>
       <Suspense fallback={<CustomLoader />}>
@@ -19,8 +20,8 @@ export default function App() {
           isDangerouslyUseLocalStorage
           clientId="a6b9fb378282420bbfc9b59cd3abc1aa"
           domain="https://sjoef.kinde.com"
-          redirectUri="http://localhost:3000/home"
-          logoutUri="http://localhost:3000/login"
+          redirectUri={process.env.NODE_ENV === 'development' ? 'http://localhost:3000/home' : 'https://sjoef.vercel.app:3000/home'}
+          logoutUri={process.env.NODE_ENV === 'development' ? 'http://localhost:3000/login' : 'https://sjoef.vercel.app/login'}
         >
           <QueryClientProvider client={queryClient}>
             <Router />

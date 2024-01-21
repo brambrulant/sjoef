@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": " tsc -p tsconfig.api.json && vercel dev",
+    "start": "tsc -p tsconfig.api.json && vercel dev",
     "build": "tsc -p tsconfig.api.json && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",

@@ -24,7 +24,7 @@ const getConsumptionPoints = async (userId: string) => {
   return response.json();
 };
 
-export function Page() {
+export default function Page() {
   const [modalOpen, setModalOpen] = React.useState(false);
   const { user } = useKindeBrowserClient();
   const [bgSize, setBgSize] = React.useState('bg-pos-0');
@@ -101,5 +101,3 @@ export function Page() {
     </div>
   );
 }
-
-export default Page;

@@ -12,7 +12,8 @@ export async function GET() {
   const { getUser, getOrganization } = getKindeServerSession();
   const user = await getUser();
 
-  if (!user || !user.id) throw new Error('something went wrong with authentication' + user);
+  if (!user || !user.id)
+    return NextResponse.json({ error: 'User is not authenticated' }, { status: 401 });
 
   const dbUser = await db.select().from(Users).where(eq(Users.id, user.id)).execute();
 
@@ -30,5 +31,5 @@ export async function GET() {
       .execute();
   }
 
-  return NextResponse.redirect('http://localhost:3000/');
+  return NextResponse.redirect('https://sjoef.vercel.app/');
 }

@@ -8,6 +8,7 @@
       "DOM.Iterable"
     ],
     "module": "ESNext",
+    "baseUrl": "",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "bundler",
@@ -45,11 +46,11 @@
   },
   "include": [
     "./src",
-    "db/*",
+    "./db/*",
     "./dist/types/**/*.ts",
     "./next-env.d.ts",
     ".next/types/**/*.ts",
-    "drizzle.config.ts"
+    "./drizzle.config.ts"
   ],
   "exclude": [
     "./node_modules"

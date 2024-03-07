@@ -28,5 +28,5 @@ export const POST = async (req: NextRequest) => {
     console.log(sessionWithLineItems);
   }
 
-  response.status(200).end();
+  return NextResponse.json({ received: true });
 };

@@ -5,7 +5,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = 'whsec_949bef214c6254c6b1ca67a812c7ef49ad139cc487dc09821246b9c69578d495';
 
 export const POST = async (req: NextRequest) => {
-  const payload = await req.body;
+  const payload = await req.json();
   const sig = req.headers.get('stripe-signature');
 
   let stripeEvent;

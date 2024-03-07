@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/vite-template.iml" filepath="$PROJECT_DIR$/.idea/vite-template.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/sjoef.iml" filepath="$PROJECT_DIR$/.idea/sjoef.iml" />
     </modules>
   </component>
 </project>

@@ -15,6 +15,9 @@
       "*": ["./api/*"],
   },
 },
-    "include": ["api/**/*"],
+    "include": [
+      "src/app/api/*",
+      "db/*"
+    ],
     "exclude": ["./node_modules", "**/*.spec.ts"]
 }

@@ -13,7 +13,7 @@ export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = (
 
   const handleBuyTickets = React.useCallback(
     () =>
-      fetch(`${process.env.BASE_URL}/api/payment/event`, {
+      fetch(`/api/payment/event`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

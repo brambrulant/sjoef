@@ -27,7 +27,7 @@ export default function Page() {
       <div
         className={`flex flex-col mt-4 md:mx-24 text-center justify-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize}`}
       >
-        {data ? data : 'no data'}
+        {data ? data.length : 'no data'}
       </div>
     </div>
   );

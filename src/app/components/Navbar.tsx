@@ -22,7 +22,6 @@ export function Navbar() {
     () => [
       { name: 'events', path: '/events' },
       { name: 'points', path: '/points' },
-      { name: 'admin', path: '/admin', auth: true },
     ],
     []
   );
@@ -43,7 +42,6 @@ export function Navbar() {
       </div>
       <TabsList className="w-full bg-transparent flex justify-end ">
         {menuItems.map((item) => {
-          if (item.auth && !permissions?.permissions?.includes('admin')) return;
           return (
             <TabsTrigger
               key={item.name}
@@ -66,11 +64,13 @@ export function Navbar() {
               )}
             </PopoverTrigger>
             <PopoverContent className="w-24 mr-4 p-0">
+              {permissions.permissions?.includes('admin') && (
+                <Button className="w-full bg-transparent font-abc text-black hover:text-white">
+                  <Link href={'/admin'}>Admin</Link>
+                </Button>
+              )}
               <Button className="w-full bg-transparent font-abc text-black hover:text-white">
                 <LogoutLink>Log Out</LogoutLink>
-              </Button>
-              <Button className="w-full bg-transparent font-abc text-black hover:text-white">
-                Settings
               </Button>
             </PopoverContent>
           </Popover>

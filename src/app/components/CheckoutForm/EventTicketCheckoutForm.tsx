@@ -43,10 +43,11 @@ export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = (
         onClick={handleBuyTickets}
         className="flex my-4 bg-slate-200 hover:bg-slate-300 border-black border-1 mx-4"
       >
-        <p className="flex flex-row text-slate-900">
+        <div className="flex flex-row text-slate-900">
           {' '}
-          Buy <p className="text-pink-600 mx-2"> {counter} </p> {`Ticket${counter > 1 ? 's' : ''}`}
-        </p>
+          Buy <div className="text-pink-600 mx-2"> {counter} </div>{' '}
+          {`Ticket${counter > 1 ? 's' : ''}`}
+        </div>
       </Button>
       <Button
         onClick={() => setCounter(counter + 1)}

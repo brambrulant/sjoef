@@ -20,6 +20,7 @@ import { useRouter } from 'next/navigation';
 import { Textarea } from '@components/ui/textarea.tsx';
 import { Slider } from '@components/ui/slider.tsx';
 import { cn } from '../lib/utils.ts';
+import Loader from '@components/Loader';
 
 // Define the validation schema
 const formSchema = z.object({
@@ -37,7 +38,7 @@ const formSchema = z.object({
 });
 
 const createEvent = async (values: z.infer<typeof formSchema>) => {
-  const response = await fetch(`${process.env.BASE_URL}/api/event`, {
+  const response = await fetch(`/api/event`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -88,7 +89,7 @@ export default function EventForm() {
   };
 
   return (
-    <div className="w-1/3 m-auto bg-slate-400 p-8 rounded-md">
+    <div className="md:w-1/3 m-auto bg-slate-400 p-8 rounded-md">
       <h1 className="font-abc text-black mb-8">create a new event</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -238,7 +239,12 @@ export default function EventForm() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="bg-slate-950">
+          <Button
+            type="submit"
+            className="bg-slate-950"
+            isLoading={mutation.isPending}
+            disabled={mutation.isPending}
+          >
             Submit
           </Button>
         </form>

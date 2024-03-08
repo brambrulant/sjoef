@@ -41,10 +41,12 @@ export default function Events() {
   if (events) {
     const currentDate = new Date();
     // first sort them, newest first
-    const sorted = events.sort((a, b) => (isAfter(a.date, b.date) ? -1 : 1));
-    upcomingEvents = sorted.filter((event) => isAfter(event.date, currentDate));
-    pastEvents = sorted.filter((event) => !isAfter(event.date, currentDate));
+    upcomingEvents = events.filter((event) => isAfter(event.date, currentDate));
+    pastEvents = events.filter((event) => !isAfter(event.date, currentDate));
   }
+
+  upcomingEvents.sort((a, b) => (isAfter(a.date, b.date) ? 1 : -1));
+  pastEvents.sort((a, b) => (isAfter(a.date, b.date) ? -1 : 1));
 
   const handleEventClick = (id: number) => {
     // Update the URL without navigating away from the page
@@ -60,7 +62,7 @@ export default function Events() {
 
   return (
     <div className="p-4 w-screen">
-      <p className="text-slate-400 font-abc text-9xl ml-[-12px]">UPCOMING</p>
+      <p className="text-slate-400 font-abc text-2xl md:text-9xl ml-[-12px]">UPCOMING</p>
       <div className="w-full">
         {isLoading ? (
           <SkeletonUI />
@@ -78,14 +80,14 @@ export default function Events() {
                 onClick={() => handleEventClick(event.id)}
               >
                 <div key={event.id} className="flex flex-col items-baseline">
-                  <p className="text-slate-400 font-abc font-light mt-2">{event.name}</p>
-                  <p className="text-pink-600 font-abc">
+                  <div className="text-slate-400 font-abc font-light mt-2">{event.name}</div>
+                  <div className="text-pink-600 font-abc">
                     {formatDate(event.date, 'eeee dd-MM-yyyy')}
-                  </p>
+                  </div>
                 </div>
               </DrawerTrigger>
             ))}
-            <DrawerContent className="bg-transparent flex flex-row w-1/2">
+            <DrawerContent className="bg-transparent flex flex-row w2/3 md:w-1/2">
               <div>
                 {isEventLoading ? <SkeletonDrawerUI /> : <EventDetails event={currentEvent} />}
               </div>
@@ -93,7 +95,7 @@ export default function Events() {
           </Drawer>
         )}
       </div>
-      <p className="text-slate-400 font-abc text-9xl ml-[-12px] mt-56">PAST</p>
+      <p className="text-slate-400 font-abc text-2xl md:text-9xl ml-[-12px] mt-56">PAST</p>
       <div className="w-full">
         <div>
           {pastEvents?.map((event: Event) => (
@@ -102,8 +104,10 @@ export default function Events() {
               className="flex flex-col items-baseline cursor-pointer w-full border-white border-b-2 h-24 bg-slate-950 hover:bg-slate-800 transition-colors"
               onClick={() => handleEventClick(event.id)}
             >
-              <p className="text-slate-400 font-abc font-light mt-2">{event.name}</p>
-              <p className="text-pink-600 font-abc">{formatDate(event.date, 'eeee dd-MM-yyyy')}</p>
+              <div className="text-slate-400 font-abc font-light mt-2">{event.name}</div>
+              <div className="text-pink-600 font-abc">
+                {formatDate(event.date, 'eeee dd-MM-yyyy')}
+              </div>
             </div>
           ))}
         </div>
@@ -143,7 +147,9 @@ function EventDetails({ event }: { event?: Event }) {
         <div className="font-bold text-slate-400">until</div> {event.close}
       </DrawerDescription>
       {!event.is_sold_out && isAfter(event.date, currentDate) && event.price !== '0.00' && (
-        <EventTicketCheckoutForm event={event} />
+        <DrawerDescription className="text-slate-400 font-abc font-light my-2 max-w-2/3">
+          <EventTicketCheckoutForm event={event} />
+        </DrawerDescription>
       )}
     </div>
   );

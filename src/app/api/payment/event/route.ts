@@ -27,9 +27,14 @@ export const POST = async (req: NextRequest) => {
         quantity: amount,
       },
     ],
+    metadata: {
+      eventId: event.id,
+      userId: user.id,
+      amount: amount,
+    },
     mode: 'payment',
-    success_url: 'http://localhost:3000/events',
-    cancel_url: 'http://localhost:3000/payment-failed',
+    success_url: 'https://sjoef.vercel.app/events',
+    cancel_url: 'https://sjoef.vercel.app/payment-failed',
   });
 
   return NextResponse.json({

@@ -137,10 +137,10 @@ function EventDetails({ event }: { event?: Event }) {
         Price: {event.price === '0.00' ? 'Free' : event.price}
       </DrawerDescription>
       <DrawerDescription className="text-pink-600 font-abc">
-        Allocation: {event.allocation}
+        Tickets sold: {event.tickets_sold}/{event.allocation}
       </DrawerDescription>
       <DrawerDescription className="text-slate-400 font-abc font-light my-2">
-        Tickets sold: {event.tickets_sold}
+        {event.description}
       </DrawerDescription>
       <DrawerDescription className="text-pink-600 font-abc mt-12">
         <div className="font-bold text-slate-400">From</div> {event.open}

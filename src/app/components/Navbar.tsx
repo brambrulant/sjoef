@@ -70,6 +70,9 @@ export function Navbar() {
                 </Button>
               )}
               <Button className="w-full bg-transparent font-abc text-black hover:text-white">
+                <Link href={'/tickets'}>Your Tickets</Link>
+              </Button>
+              <Button className="w-full bg-transparent font-abc text-black hover:text-white">
                 <LogoutLink>Log Out</LogoutLink>
               </Button>
             </PopoverContent>

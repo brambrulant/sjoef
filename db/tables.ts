@@ -21,7 +21,8 @@ export const Events = pgTable('events', {
 export const Tickets = pgTable('tickets', {
   id: serial('id').primaryKey(),
   event_id: integer('event_id').references(() => Events.id),
-  user_id: text('user_id'),
+  user_id: text('user_id').references(() => Users.id),
+  amount: integer('amount'),
   created_at: timestamp('created_at'),
   updated_at: timestamp('updated_at'),
 });

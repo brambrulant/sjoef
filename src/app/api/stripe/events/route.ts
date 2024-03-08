@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const makeTicketCallToDatabase = async (userId: string, eventId: string, amount: string) => {
-  await fetch('https://sjoef.vercel.app/api/ticket', {
+  await fetch(`${process.env.BASE_URL}/api/ticket`, {
     method: 'POST',
     body: JSON.stringify({ userId: userId, eventId: eventId, amount: amount }),
   });

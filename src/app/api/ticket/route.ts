@@ -53,13 +53,3 @@ export const POST = async (req: NextRequest) => {
 
   return NextResponse.json(result);
 };
-
-export const GET = async (req: NextRequest) => {
-  const db = drizzle(sql);
-  const body = await req.json();
-
-  const userId = body.userId;
-
-  const result = await db.select().from(Tickets).where(eq(Tickets.user_id, userId));
-  return NextResponse.json(result);
-};

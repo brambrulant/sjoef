@@ -33,8 +33,8 @@ export const POST = async (req: NextRequest) => {
       amount: amount,
     },
     mode: 'payment',
-    success_url: 'https://sjoef.vercel.app/events',
-    cancel_url: 'https://sjoef.vercel.app/payment-failed',
+    success_url: `https://${process.env.BASE_URL}/events`,
+    cancel_url: `https://${process.env.BASE_URL}/events`,
   });
 
   return NextResponse.json({

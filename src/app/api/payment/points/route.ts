@@ -27,8 +27,8 @@ export const POST = async (req: NextRequest) => {
       },
     ],
     mode: 'payment',
-    success_url: 'https://sjoef.vercel.app/points',
-    cancel_url: 'https://sjoef.vercel.app/points',
+    success_url: `https://${process.env.BASE_URL}/points`,
+    cancel_url: `https://${process.env.BASE_URL}/points`,
   });
 
   return NextResponse.json({

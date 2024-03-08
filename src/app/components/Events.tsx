@@ -139,14 +139,8 @@ function EventDetails({ event }: { event?: Event }) {
         Tickets sold: {event.tickets_sold}
       </DrawerDescription>
       <DrawerDescription className="text-pink-600 font-abc mt-12">
-        <p className="font-bold text-slate-400">From</p>{' '}
-        {event.open && isValid(new Date(event.open))
-          ? formatDate(new Date(event.open), 'h.mm')
-          : 'some time '}{' '}
-        <p className="font-bold text-slate-400">until</p>{' '}
-        {event.close && isValid(new Date(event.close))
-          ? formatDate(new Date(event.close), 'h.mm')
-          : 'another time'}
+        <div className="font-bold text-slate-400">From</div> {event.open}
+        <div className="font-bold text-slate-400">until</div> {event.close}
       </DrawerDescription>
       {!event.is_sold_out && isAfter(event.date, currentDate) && event.price !== '0.00' && (
         <EventTicketCheckoutForm event={event} />

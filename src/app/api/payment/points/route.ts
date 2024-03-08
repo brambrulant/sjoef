@@ -9,8 +9,6 @@ export const POST = async (req: NextRequest) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  console.log('request', request);
-
   if (!user) {
     return NextResponse.json({ error: 'User is not authenticated' }, { status: 401 });
   }
@@ -23,7 +21,7 @@ export const POST = async (req: NextRequest) => {
           product_data: {
             name: 'sjoef_points',
           },
-          unit_amount: 200,
+          unit_amount: 100,
         },
         quantity: items[0].amount,
       },

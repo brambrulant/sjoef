@@ -2,8 +2,8 @@ export interface Event {
   id: number;
   name: string;
   date: Date;
-  open: Date;
-  close: Date;
+  open: string;
+  close: string;
   created_at: Date;
   updated_at: Date;
   genre: string;

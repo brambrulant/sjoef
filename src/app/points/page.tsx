@@ -10,7 +10,7 @@ import ConsumptionPointsCheckoutForm from '@components/CheckoutForm/ConsumptionP
 
 const getConsumptionPoints = async (userId: string) => {
   const response = await fetch(
-    `${process.env.BASE_URL}/api/points?` +
+    `/api/points?` +
       new URLSearchParams({
         userId: userId,
       }),

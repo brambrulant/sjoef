@@ -1,20 +1,13 @@
 'use client';
 
 import React from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Ticket } from '../types/ticket.ts';
 import { Event } from '../types/event.ts';
 import { format } from 'date-fns';
 import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@components/ui/dialog.tsx';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
 
 async function getTickets(): Promise<Ticket[]> {
   return await fetch('/api/tickets').then((res) => res.json());
@@ -110,18 +103,19 @@ export default function Page() {
     queryFn: () => getEvents(),
   });
 
+  const poss = ['bg-pos-0', 'bg-pos-20', 'bg-pos-40', 'bg-pos-60', 'bg-pos-80', 'bg-pos-100'];
+
+  const eventsWithTickets = React.useMemo(
+    () => events?.filter((event) => tickets?.some((ticket) => ticket.event_id === event.id)),
+    [events, tickets]
+  );
+
   if (!tickets)
     return (
       <div className="flex w-screen justify-center align-middle">
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>
       </div>
     );
-
-  const poss = ['bg-pos-0', 'bg-pos-20', 'bg-pos-40', 'bg-pos-60', 'bg-pos-80', 'bg-pos-100'];
-
-  const eventsWithTickets = events?.filter((event) =>
-    tickets.some((ticket) => ticket.event_id === event.id)
-  );
 
   return (
     <div className="w-full flex flex-col justify-between">

@@ -111,22 +111,24 @@ export default function Page() {
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>
       </div>
     );
-  if (!events) return null;
+  // if (!events) return null;
 
-  const eventsWithTickets = events?.filter((event) =>
-    tickets?.forEach((ticket) => ticket.event_id === event.id)
-  );
+  console.log('events', events);
+  console.log('tickets', tickets);
 
   return (
     <div className="w-full flex flex-col justify-between">
-      {eventsWithTickets?.map((event) => (
-        <TicketComponent
-          key={event?.id}
-          tickets={tickets.filter((ticket) => ticket.event_id === event?.id)}
-          event={event}
-          poss={poss}
-        />
-      ))}
+      {events?.map(
+        (event) =>
+          tickets.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
+            <TicketComponent
+              key={event?.id}
+              tickets={tickets.filter((ticket) => ticket.event_id === event?.id)}
+              event={event}
+              poss={poss}
+            />
+          )
+      )}
     </div>
   );
 }

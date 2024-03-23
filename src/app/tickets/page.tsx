@@ -8,13 +8,18 @@ import { format } from 'date-fns';
 import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 async function getTickets(): Promise<Ticket[]> {
   return await fetch('/api/tickets').then((res) => res.json());
 }
 
-async function getEvents(): Promise<Event[]> {
-  return await fetch('/api/events').then((res) => res.json());
+async function getEvents(userId: string): Promise<Event[]> {
+  return await fetch('/api/events', {
+    body: JSON.stringify({
+      user_id: userId,
+    }),
+  }).then((res) => res.json());
 }
 
 interface TicketComponentProps {
@@ -93,6 +98,8 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
 }
 
 export default function Page() {
+  const { user } = useKindeBrowserClient();
+
   const { data: tickets, isLoading: isTicketsLoading } = useQuery({
     queryKey: ['tickets'],
     queryFn: () => getTickets(),
@@ -100,7 +107,7 @@ export default function Page() {
 
   const { data: events, isLoading: isEventsLoading } = useQuery({
     queryKey: ['events'],
-    queryFn: () => getEvents(),
+    queryFn: () => getEvents(user?.id!),
   });
 
   const poss = ['bg-pos-0', 'bg-pos-20', 'bg-pos-40', 'bg-pos-60', 'bg-pos-80', 'bg-pos-100'];

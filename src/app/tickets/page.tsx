@@ -69,7 +69,7 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
               <DialogContent>
                 <DialogHeader>ticket id: {ticket.id}</DialogHeader>
                 <QRCode
-                  size={600}
+                  size={300}
                   value={JSON.stringify({
                     ticket_id: ticket.id,
                     user_id: ticket.user_id,
@@ -106,10 +106,6 @@ export default function Page() {
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>
       </div>
     );
-  // if (!events) return null;
-
-  console.log('events', events);
-  console.log('tickets', tickets);
 
   return (
     <div className="w-full flex flex-col justify-between">

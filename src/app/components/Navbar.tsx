@@ -38,7 +38,7 @@ export function Navbar() {
   return (
     <Tabs className="w-screen">
       <div className="font-abc text-2xl text-white absolute ml-4 cursor-pointer">
-        <Link href="/events">sjoef</Link>
+        <Link href="/events">sjoef.</Link>
       </div>
       <TabsList className="w-full bg-transparent flex justify-end ">
         {menuItems.map((item) => {

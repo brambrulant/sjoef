@@ -8,7 +8,7 @@ import { Button } from '@components/ui/button.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 const stripePromise = loadStripe(
-  'pk_test_51OUrwzBcHpJ0QGERUMPXD5qP4omXXac8P8htuQh49ktVdUuT0SPJYpxyCSrtPffIDMU5HoiqKQleGctUZHGfpZ7V00lPGr6SZx',
+  'pk_live_51OUrwzBcHpJ0QGERGE5ZWrbSO1hbsCvTJlRob82HGKOHvLY0S8V9ykkodoqeZgVUWBmmyjcEpZQxwpuRJv8K2muf00mJu4ZorR',
   {
     stripeAccount: 'sjoef',
   }

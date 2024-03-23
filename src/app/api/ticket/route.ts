@@ -14,17 +14,14 @@ export const POST = async (req: NextRequest) => {
 
   console.log('creating tickets..');
 
-  const result = await db
-    .insert(Tickets)
-    .values(
-      Array.from({ length: amount }, () => ({
-        event_id: eventId,
-        user_id: userId,
-        created_at: new Date(),
-        updated_at: new Date(),
-      }))
-    )
-    .execute();
+  const tickets = Array.from({ length: amount }, () => ({
+    event_id: eventId,
+    user_id: userId,
+    created_at: new Date(),
+    updated_at: new Date(),
+  }));
+
+  const result = await db.insert(Tickets).values(tickets).execute();
 
   console.log('successfully created tickets..', result);
 

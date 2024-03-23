@@ -19,6 +19,5 @@ export const GET = async (req: NextRequest) => {
 
   const result = await db.select().from(Tickets).where(eq(Tickets.user_id, user?.id));
 
-  console.log('resultjes', result);
   return NextResponse.json(result);
 };

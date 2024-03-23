@@ -26,7 +26,9 @@ export const GET = async (req: NextRequest) => {
     .where(and(eq(Tickets.event_id, parseInt(eventId)), eq(Tickets.user_id, user?.id)));
 
   if (!tickets) {
-    return NextResponse.json({ message: 'No tickets found' });
+    return NextResponse.json({ message: 'No tickets for this event found' }, { status: 404 });
   }
-  return NextResponse.json(tickets[0]);
+
+  console.log('tickets', tickets);
+  return NextResponse.json(tickets);
 };

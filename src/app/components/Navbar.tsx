@@ -21,7 +21,7 @@ export function Navbar() {
   const menuItems = React.useMemo(
     () => [
       { name: 'events', path: '/events' },
-      { name: 'points', path: '/points' },
+      // { name: 'points', path: '/points' },
     ],
     []
   );

@@ -134,7 +134,13 @@ export default function Events() {
 }
 
 function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] }) {
+  const router = useRouter();
   if (!event) return <div>no event </div>;
+
+  const handleRedirectToTickets = () => {
+    router.push('/tickets', undefined);
+  };
+
   const currentDate = new Date();
   return (
     <div className="flex flex-col items-baseline h-full p-8">
@@ -179,7 +185,9 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
       )}
       {tickets?.length && (
         <DrawerDescription className="text-pink-600 font-abc">
-          tickets: {tickets.length}
+          <Button onClick={handleRedirectToTickets}>
+            you have {tickets.length} for this event
+          </Button>
         </DrawerDescription>
       )}
     </div>

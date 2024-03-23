@@ -10,16 +10,16 @@ import { Button } from '@components/ui/button.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
-async function getTickets(): Promise<Ticket[]> {
-  return await fetch('/api/tickets').then((res) => res.json());
-}
-
-async function getEvents(userId: string): Promise<Event[]> {
-  return await fetch('/api/events', {
+async function getTickets(userId: string): Promise<Ticket[]> {
+  return await fetch('/api/tickets', {
     body: JSON.stringify({
       user_id: userId,
     }),
   }).then((res) => res.json());
+}
+
+async function getEvents(): Promise<Event[]> {
+  return await fetch('/api/events').then((res) => res.json());
 }
 
 interface TicketComponentProps {
@@ -31,7 +31,6 @@ interface TicketComponentProps {
 function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   const [bgSize, setBgSize] = React.useState('bg-pos-0');
   const [open, setOpen] = React.useState(false);
-  const [qrValue, setQRValue] = React.useState('');
 
   const handleClicked = React.useCallback(() => {
     setBgSize(poss[Math.floor(Math.random() * poss.length)]);
@@ -56,18 +55,7 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
           {tickets.map((ticket, i) => (
             <Dialog key={i}>
               <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black w-1/2 p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
-                <div
-                  className="flex flex-row items-center"
-                  onClick={() =>
-                    setQRValue(
-                      JSON.stringify({
-                        ticket_id: ticket.id,
-                        user_id: ticket.user_id,
-                        event_id: ticket.event_id,
-                      })
-                    )
-                  }
-                >
+                <div className="flex flex-row items-center">
                   <QRCode
                     value={JSON.stringify({
                       ticket_id: ticket.id,
@@ -102,12 +90,12 @@ export default function Page() {
 
   const { data: tickets, isLoading: isTicketsLoading } = useQuery({
     queryKey: ['tickets'],
-    queryFn: () => getTickets(),
+    queryFn: () => getTickets(user?.id!),
   });
 
   const { data: events, isLoading: isEventsLoading } = useQuery({
     queryKey: ['events'],
-    queryFn: () => getEvents(user?.id!),
+    queryFn: () => getEvents(),
   });
 
   const poss = ['bg-pos-0', 'bg-pos-20', 'bg-pos-40', 'bg-pos-60', 'bg-pos-80', 'bg-pos-100'];

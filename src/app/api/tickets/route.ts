@@ -9,7 +9,9 @@ export const GET = async (req: NextRequest) => {
 
   const body = await req.json();
 
-  const userId = body?.user_id;
+  console.log('body', body);
+
+  const userId = body?.userId;
 
   if (!userId) {
     return NextResponse.json({
@@ -19,5 +21,6 @@ export const GET = async (req: NextRequest) => {
 
   const result = await db.select().from(Tickets).where(eq(Tickets.user_id, userId));
 
+  console.log('result', result);
   return NextResponse.json(result);
 };

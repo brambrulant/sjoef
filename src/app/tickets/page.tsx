@@ -54,7 +54,7 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
         <div className="flex flex-col justify-between items-center">
           {tickets.map((ticket, i) => (
             <Dialog key={i}>
-              <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black w-1/2 p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
+              <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
                 <div className="flex flex-row items-center">
                   <QRCode
                     value={JSON.stringify({

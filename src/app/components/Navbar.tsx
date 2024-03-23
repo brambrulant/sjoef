@@ -63,16 +63,16 @@ export function Navbar() {
                 <Skeleton className="relative bg-slate-800 flex h-10 w-10 shrink-0 overflow-hidden rounded-full" />
               )}
             </PopoverTrigger>
-            <PopoverContent className="w-24 mr-4 p-2">
+            <PopoverContent className="mr-4 p-0">
               {permissions.permissions?.includes('admin') && (
-                <Button className="w-full bg-transparent font-abc text-black hover:text-white">
+                <Button className="w-full border-2 border-transparent bg-transparent font-abc text-black hover:text-white">
                   <Link href={'/admin'}>Admin</Link>
                 </Button>
               )}
-              <Button className="w-full bg-transparent font-abc text-black hover:text-white">
-                <Link href={'/tickets'}>Tickets</Link>
+              <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
+                <Link href={'/tickets'}>My Tickets</Link>
               </Button>
-              <Button className="w-full bg-transparent font-abc text-black hover:text-white">
+              <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
                 <LogoutLink>Log Out</LogoutLink>
               </Button>
             </PopoverContent>

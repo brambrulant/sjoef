@@ -1,15 +1,17 @@
 'use client';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { formatDate, isAfter, isValid } from 'date-fns';
+import { formatDate, isAfter, isBefore, addDays } from 'date-fns';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import { Event } from '../types/event';
+import { Ticket } from '../types/ticket';
 
 import { Skeleton } from '@components/ui/skeleton.tsx';
 import { Drawer, DrawerDescription, DrawerHeader, DrawerTrigger } from '@components/ui/drawer.tsx';
 import { DrawerContent } from '@components/ui/drawer-vertical.tsx';
 import EventTicketCheckoutForm from '@components/CheckoutForm/EventTicketCheckoutForm.tsx';
+import { Button } from '@components/ui/button.tsx';
 
 async function getEvents(): Promise<Event[]> {
   return await fetch('/api/events').then((res) => res.json());
@@ -17,6 +19,10 @@ async function getEvents(): Promise<Event[]> {
 
 async function getEventById(id: string): Promise<Event> {
   return await fetch(`/api/event/${id}`).then((res) => res.json());
+}
+
+async function getTicketsByEventId(id: string): Promise<Ticket[]> {
+  return await fetch(`/api/tickets/${id}`).then((res) => res.json());
 }
 
 export default function Events() {
@@ -36,13 +42,20 @@ export default function Events() {
     enabled: !!eventId, // Only run this query if eventId is not null or undefined
   });
 
+  const { data: tickets, isLoading: isTicketsLoading } = useQuery({
+    queryKey: ['tickets'],
+    queryFn: () => getTicketsByEventId(eventId!),
+    enabled: !!eventId,
+  });
+
   let upcomingEvents: Event[] = [];
   let pastEvents: Event[] = [];
   if (events) {
-    const currentDate = new Date();
+    const currentDate = new Date().setHours(0, 0, 0, 0);
+
     // first sort them, newest first
     upcomingEvents = events.filter((event) => isAfter(event.date, currentDate));
-    pastEvents = events.filter((event) => !isAfter(event.date, currentDate));
+    pastEvents = events.filter((event) => isBefore(event.date, currentDate));
   }
 
   upcomingEvents.sort((a, b) => (isAfter(a.date, b.date) ? 1 : -1));
@@ -89,7 +102,11 @@ export default function Events() {
             ))}
             <DrawerContent className="bg-transparent flex flex-row w2/3 md:w-1/2">
               <div>
-                {isEventLoading ? <SkeletonDrawerUI /> : <EventDetails event={currentEvent} />}
+                {isEventLoading ? (
+                  <SkeletonDrawerUI />
+                ) : (
+                  <EventDetails event={currentEvent} tickets={tickets} />
+                )}
               </div>
             </DrawerContent>
           </Drawer>
@@ -116,7 +133,7 @@ export default function Events() {
   );
 }
 
-function EventDetails({ event }: { event?: Event }) {
+function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] }) {
   if (!event) return <div>no event </div>;
   const currentDate = new Date();
   return (
@@ -142,13 +159,27 @@ function EventDetails({ event }: { event?: Event }) {
       <DrawerDescription className="text-slate-400 font-abc font-light my-2">
         {event.description}
       </DrawerDescription>
+      {event.line_up && (
+        <DrawerDescription className="text-pink-600 font-abc">
+          Artists: {event.line_up}
+        </DrawerDescription>
+      )}
       <DrawerDescription className="text-pink-600 font-abc mt-12">
         <div className="font-bold text-slate-400">From</div> {event.open}
         <div className="font-bold text-slate-400">until</div> {event.close}
       </DrawerDescription>
-      {!event.is_sold_out && isAfter(event.date, currentDate) && event.price !== '0.00' && (
+      {!event.is_sold_out && isAfter(event.date, currentDate) && event.price !== '0.00' ? (
         <DrawerDescription className="text-slate-400 font-abc font-light my-2 max-w-2/3">
           <EventTicketCheckoutForm event={event} />
+        </DrawerDescription>
+      ) : (
+        <Button disabled variant="secondary" className="mt-4">
+          {event.is_sold_out ? 'Sold out' : event.price === '0.00' ? 'free entrance' : 'N/A'}
+        </Button>
+      )}
+      {tickets?.length && (
+        <DrawerDescription className="text-pink-600 font-abc">
+          tickets: {tickets.length}
         </DrawerDescription>
       )}
     </div>

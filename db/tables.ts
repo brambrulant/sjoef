@@ -1,4 +1,4 @@
-import { integer, pgTable, text, serial, timestamp } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, serial, timestamp, boolean } from 'drizzle-orm/pg-core';
 
 export const Events = pgTable('events', {
   id: serial('id').primaryKey(),
@@ -11,8 +11,8 @@ export const Events = pgTable('events', {
   genre: text('genre'),
   organizer: text('organizer'),
   price: text('price'),
-  allocation: text('allocation'),
-  tickets_sold: text('tickets_sold'),
+  allocation: integer('allocation'),
+  tickets_sold: integer('tickets_sold'),
   is_sold_out: text('is_sold_out'),
   line_up: text('line_up'),
   description: text('description'),
@@ -22,7 +22,7 @@ export const Tickets = pgTable('tickets', {
   id: serial('id').primaryKey(),
   event_id: integer('event_id').references(() => Events.id),
   user_id: text('user_id').references(() => Users.id),
-  amount: integer('amount'),
+  is_used: boolean('is_used'),
   created_at: timestamp('created_at'),
   updated_at: timestamp('updated_at'),
 });

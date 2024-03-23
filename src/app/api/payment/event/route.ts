@@ -33,8 +33,8 @@ export const POST = async (req: NextRequest) => {
       amount: amount,
     },
     mode: 'payment',
-    success_url: `https://${process.env.BASE_URL}/events`,
-    cancel_url: `https://${process.env.BASE_URL}/events`,
+    success_url: `${process.env.BASE_URL}/tickets`,
+    cancel_url: `${process.env.BASE_URL}/events?id=${event.id}`,
   });
 
   return NextResponse.json({

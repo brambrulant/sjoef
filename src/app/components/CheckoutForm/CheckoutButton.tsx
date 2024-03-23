@@ -49,7 +49,7 @@ export const CheckoutButton = (props: { className: string }) => {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `${process.env.BASE_URL}points`,
+        return_url: `${process.env.BASE_URL}/points`,
       },
     });
 

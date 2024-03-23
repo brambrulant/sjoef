@@ -114,7 +114,7 @@ export default function Page() {
   if (!events) return null;
 
   const eventsWithTickets = events?.filter((event) =>
-    tickets?.some((ticket) => ticket.event_id === event.id)
+    tickets?.forEach((ticket) => ticket.event_id === event.id)
   );
 
   return (

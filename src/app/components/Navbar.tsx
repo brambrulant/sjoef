@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 import { Tabs, TabsList, TabsTrigger } from '@components/ui/tabs.tsx';
-import { useKindeBrowserClient, LogoutLink } from '@kinde-oss/kinde-auth-nextjs';
+import { useKindeBrowserClient, LogoutLink, LoginLink } from '@kinde-oss/kinde-auth-nextjs';
 import { Popover, PopoverContent, PopoverTrigger } from '@components/ui/popover.tsx';
 import AvatarComponent from '@components/Avatar.tsx';
 import { Button } from '@components/ui/button.tsx';
@@ -21,7 +21,8 @@ export function Navbar() {
   const menuItems = React.useMemo(
     () => [
       { name: 'events', path: '/events' },
-      // { name: 'points', path: '/points' },
+      // { name: 'points', path: '/points', permissions: ['user'] },
+      { name: 'tickets', path: '/tickets', permissions: ['user'] },
     ],
     []
   );
@@ -42,6 +43,7 @@ export function Navbar() {
       </div>
       <TabsList className="w-full bg-transparent flex justify-end ">
         {menuItems.map((item) => {
+          if (!user && item.permissions?.includes('user')) return null;
           return (
             <TabsTrigger
               key={item.name}
@@ -69,11 +71,13 @@ export function Navbar() {
                   <Link href={'/admin'}>Admin</Link>
                 </Button>
               )}
+              {user && (
+                <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
+                  <Link href={'/tickets'}>My Tickets</Link>
+                </Button>
+              )}
               <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
-                <Link href={'/tickets'}>My Tickets</Link>
-              </Button>
-              <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
-                <LogoutLink>Log Out</LogoutLink>
+                {!user ? <LoginLink>Log in</LoginLink> : <LogoutLink>Log Out</LogoutLink>}
               </Button>
             </PopoverContent>
           </Popover>

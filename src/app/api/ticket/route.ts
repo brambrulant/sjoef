@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { and, eq } from 'drizzle-orm';
 import { sql } from '@vercel/postgres';
@@ -14,12 +15,24 @@ export const POST = async (req: NextRequest) => {
 
   console.log('creating tickets..');
 
-  const tickets = Array.from({ length: amount }, () => ({
-    event_id: eventId,
-    user_id: userId,
-    created_at: new Date(),
-    updated_at: new Date(),
-  }));
+  const secret = process.env.JWT_SECRET as unknown as jwt.Secret;
+
+  const tickets = Array.from({ length: amount }, () => {
+    const payload = {
+      event_id: eventId,
+      user_id: userId,
+    };
+
+    const token = jwt.sign(payload, secret);
+
+    return {
+      event_id: eventId,
+      user_id: userId,
+      jwt: token,
+      created_at: new Date(),
+      updated_at: new Date(),
+    };
+  });
 
   const result = await db.insert(Tickets).values(tickets).execute();
 

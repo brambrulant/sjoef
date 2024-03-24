@@ -9,13 +9,10 @@ import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import Loader from '@components/Loader';
 
-async function getTickets(userId: string): Promise<Ticket[]> {
-  return await fetch('/api/tickets', {
-    body: JSON.stringify({
-      user_id: userId,
-    }),
-  }).then((res) => res.json());
+async function getTickets(): Promise<Ticket[]> {
+  return await fetch('/api/tickets').then((res) => res.json());
 }
 
 async function getEvents(): Promise<Event[]> {
@@ -38,6 +35,7 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   }, [open, poss]);
 
   if (!event) return null;
+  if (!tickets) return null;
 
   return (
     <div
@@ -86,21 +84,27 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
 }
 
 export default function Page() {
-  const { user } = useKindeBrowserClient();
-
-  const { data: tickets, isLoading: isTicketsLoading } = useQuery({
-    queryKey: ['tickets'],
-    queryFn: () => getTickets(user?.id!),
+  const { user, isLoading: isUserLoading } = useKindeBrowserClient();
+  const { data: allTickets, isLoading: isAllTicketsLoading } = useQuery({
+    queryKey: ['allTickets'],
+    queryFn: () => getTickets(),
   });
 
   const { data: events, isLoading: isEventsLoading } = useQuery({
     queryKey: ['events'],
     queryFn: () => getEvents(),
+    enabled: !isUserLoading,
   });
 
   const poss = ['bg-pos-0', 'bg-pos-20', 'bg-pos-40', 'bg-pos-60', 'bg-pos-80', 'bg-pos-100'];
 
-  if (!tickets)
+  if (isEventsLoading || isAllTicketsLoading)
+    return (
+      <div className="w-screen h-screen flex justify-center items-baseline">
+        <Loader className="text-pink-600 mt-24" size={48} />
+      </div>
+    );
+  if (!allTickets)
     return (
       <div className="flex w-screen justify-center align-middle">
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>
@@ -111,10 +115,10 @@ export default function Page() {
     <div className="w-full flex flex-col justify-between">
       {events?.map(
         (event) =>
-          tickets.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
+          allTickets.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
             <TicketComponent
               key={event?.id}
-              tickets={tickets.filter((ticket) => ticket.event_id === event?.id)}
+              tickets={allTickets.filter((ticket) => ticket.event_id === event?.id)}
               event={event}
               poss={poss}
             />

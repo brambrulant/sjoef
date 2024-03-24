@@ -16,6 +16,7 @@ export const Events = pgTable('events', {
   is_sold_out: text('is_sold_out'),
   line_up: text('line_up'),
   description: text('description'),
+  external_link: text('external_link'),
 });
 
 export const Tickets = pgTable('tickets', {
@@ -23,6 +24,7 @@ export const Tickets = pgTable('tickets', {
   event_id: integer('event_id').references(() => Events.id),
   user_id: text('user_id').references(() => Users.id),
   is_used: boolean('is_used'),
+  jwt: text('jwt'),
   created_at: timestamp('created_at'),
   updated_at: timestamp('updated_at'),
 });

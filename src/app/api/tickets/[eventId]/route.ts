@@ -29,6 +29,5 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json({ message: 'No tickets for this event found' }, { status: 404 });
   }
 
-  console.log('tickets', tickets);
   return NextResponse.json(tickets);
 };

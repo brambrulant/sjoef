@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { formatDate, isAfter, isBefore, addDays } from 'date-fns';
+import { formatDate, isAfter, isBefore } from 'date-fns';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import { Event } from '../types/event';
@@ -12,6 +12,7 @@ import { Drawer, DrawerDescription, DrawerHeader, DrawerTrigger } from '@compone
 import { DrawerContent } from '@components/ui/drawer-vertical.tsx';
 import EventTicketCheckoutForm from '@components/CheckoutForm/EventTicketCheckoutForm.tsx';
 import { Button } from '@components/ui/button.tsx';
+import { ScrollArea } from '@components/ui/scroll-area.tsx';
 
 async function getEvents(): Promise<Event[]> {
   return await fetch('/api/events').then((res) => res.json());
@@ -100,14 +101,14 @@ export default function Events() {
                 </div>
               </DrawerTrigger>
             ))}
-            <DrawerContent className="bg-transparent flex flex-row w2/3 md:w-1/2">
-              <div>
+            <DrawerContent className="bg-slate-800/40 flex flex-row w2/3 md:w-1/2">
+              <ScrollArea>
                 {isEventLoading ? (
                   <SkeletonDrawerUI />
                 ) : (
                   <EventDetails event={currentEvent} tickets={tickets} />
                 )}
-              </div>
+              </ScrollArea>
             </DrawerContent>
           </Drawer>
         )}
@@ -143,7 +144,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
 
   const currentDate = new Date();
   return (
-    <div className="flex flex-col items-baseline h-full p-8">
+    <div className="flex flex-col items-baseline p-8">
       <DrawerHeader className="text-slate-400 font-abc font-bold text-2xl my-2 mx-0 p-0">
         {event.name}
       </DrawerHeader>
@@ -160,7 +161,20 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
         Price: {event.price === '0.00' ? 'Free' : event.price}
       </DrawerDescription>
       <DrawerDescription className="text-pink-600 font-abc">
-        Tickets sold: {event.tickets_sold}/{event.allocation}
+        {event.external_link ? (
+          <a href={event.external_link} target="_blank" rel="noreferrer" className="underline">
+            More info
+          </a>
+        ) : (
+          <a
+            href="https://www.instagram.com/shouf.shouf/"
+            target="_blank"
+            rel="noreferrer"
+            className="underline"
+          >
+            IG
+          </a>
+        )}
       </DrawerDescription>
       <DrawerDescription className="text-slate-400 font-abc font-light my-2">
         {event.description}

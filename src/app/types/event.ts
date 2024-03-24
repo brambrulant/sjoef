@@ -14,4 +14,5 @@ export interface Event {
   is_sold_out: string;
   line_up: string;
   description: string;
+  external_link: string;
 }

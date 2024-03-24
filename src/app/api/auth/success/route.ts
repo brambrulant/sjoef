@@ -31,5 +31,5 @@ export async function GET() {
       .execute();
   }
 
-  return NextResponse.redirect(process.env.BASE_URL || 'https://sjoef.vercel.app');
+  return NextResponse.redirect(process.env.BASE_URL || 'https://sjoef.app');
 }

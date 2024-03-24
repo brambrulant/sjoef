@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Event } from '../../types/event.ts';
 
 import { Button } from '@components/ui/button.tsx';
+import { LoginLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 export interface EventTicketCheckoutFormProps {
   event: Event;
@@ -11,6 +12,8 @@ export interface EventTicketCheckoutFormProps {
 export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = ({ event }) => {
   const [counter, setCounter] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const { user } = useKindeBrowserClient();
 
   const handleBuyTickets = React.useCallback(() => {
     setLoading(true);
@@ -31,6 +34,14 @@ export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = (
       })
       .catch((error) => console.error('Error:', error));
   }, [event, counter]);
+
+  if (!user) {
+    return (
+      <Button variant="secondary">
+        <LoginLink>Log in to buy tickets</LoginLink>
+      </Button>
+    );
+  }
 
   return (
     <div className="flex flex-row justify-center">

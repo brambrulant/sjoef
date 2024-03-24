@@ -115,10 +115,10 @@ export default function Page() {
     <div className="w-full flex flex-col justify-between">
       {events?.map(
         (event) =>
-          allTickets.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
+          allTickets?.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
             <TicketComponent
               key={event?.id}
-              tickets={allTickets.filter((ticket) => ticket.event_id === event?.id)}
+              tickets={allTickets?.filter((ticket) => ticket.event_id === event?.id)}
               event={event}
               poss={poss}
             />

@@ -104,6 +104,7 @@ export default function Page() {
         <Loader className="text-pink-600 mt-24" size={48} />
       </div>
     );
+  console.log('hello?', allTickets);
   if (!allTickets)
     return (
       <div className="flex w-screen justify-center align-middle">

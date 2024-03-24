@@ -11,12 +11,22 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import Loader from '@components/Loader';
 
-async function getTickets(): Promise<Ticket[]> {
-  return await fetch('/api/tickets').then((res) => res.json());
+async function getTickets(): Promise<Ticket[] | null> {
+  try {
+    return await fetch('/api/tickets').then((res) => res.json());
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
-async function getEvents(): Promise<Event[]> {
-  return await fetch('/api/events').then((res) => res.json());
+async function getEvents(): Promise<Event[] | null> {
+  try {
+    return await fetch('/api/events').then((res) => res.json());
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 interface TicketComponentProps {

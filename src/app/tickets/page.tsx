@@ -7,7 +7,13 @@ import { Event } from '../types/event.ts';
 import { format } from 'date-fns';
 import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
-import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTrigger,
+} from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import Loader from '@components/Loader';
 
@@ -64,26 +70,13 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
             <Dialog key={i}>
               <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
                 <div className="flex flex-row items-center">
-                  <QRCode
-                    value={JSON.stringify({
-                      ticket_id: ticket.id,
-                      user_id: ticket.user_id,
-                      event_id: ticket.event_id,
-                    })}
-                  />
+                  <QRCode value={ticket.jwt} />
                   <p className="ml-4 font-mono">ticket id: {ticket.id}</p>
                 </div>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>ticket id: {ticket.id}</DialogHeader>
-                <QRCode
-                  size={300}
-                  value={JSON.stringify({
-                    ticket_id: ticket.id,
-                    user_id: ticket.user_id,
-                    event_id: ticket.event_id,
-                  })}
-                />
+                <QRCode size={300} value={ticket.jwt} />
               </DialogContent>
             </Dialog>
           ))}

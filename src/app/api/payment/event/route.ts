@@ -32,6 +32,8 @@ export const POST = async (req: NextRequest) => {
       userId: user.id,
       amount: amount,
     },
+    customer_email: user.email,
+    allow_promotion_codes: true,
     mode: 'payment',
     success_url: `${process.env.BASE_URL}/tickets`,
     cancel_url: `${process.env.BASE_URL}/events?id=${event.id}`,

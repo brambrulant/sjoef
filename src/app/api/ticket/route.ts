@@ -13,6 +13,18 @@ export const POST = async (req: NextRequest) => {
   const eventId = body.eventId;
   const amount = parseInt(body.amount);
 
+  if (!userId || !eventId || !amount) {
+    console.log('Missing userId, eventId or amount');
+    return NextResponse.json(
+      {
+        error: 'Missing userId, eventId or amount',
+      },
+      {
+        status: 400,
+      }
+    );
+  }
+
   console.log('creating tickets..');
 
   const secret = process.env.JWT_SECRET as unknown as jwt.Secret;

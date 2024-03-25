@@ -1,58 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
-import { and, eq } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { sql } from '@vercel/postgres';
-import { Tickets, Users, Events } from '@db/tables.ts';
-import nodemailer from 'nodemailer';
-import { render } from '@react-email/render';
+import { Tickets, Events } from '@db/tables.ts';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { Email } from '@components/Email.tsx';
-
-const getEvent = async (eventId: string) => {
-  const db = drizzle(sql);
-  return await db
-    .select()
-    .from(Events)
-    .where(eq(Events.id, parseInt(eventId)));
-};
-
-const emailTicketsToUser = async (
-  tickets: { event_id: any; user_id: any; jwt: string; created_at: Date; updated_at: Date }[],
-  email?: string | null
-) => {
-  const event = await getEvent(tickets[0].event_id);
-  const transporter = nodemailer.createTransport({
-    service: 'Gmail',
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
-    auth: {
-      user: 'sjoefbar@gmail.com',
-      pass: 'oqeo hzqs bkdr kduq',
-    },
-  });
-  if (!email) {
-    console.error('No email provided');
-    return;
-  }
-
-  const emailHtml = render(Email({ tickets, url: 'https://example.com' }));
-
-  const mailOptions = {
-    from: 'sjoefbar@gmail.com',
-    to: email,
-    subject: `Your tickets for ${event[0]?.name}`,
-    html: emailHtml,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Error sending email: ', error);
-    } else {
-      console.log('Email sent: ', info.response);
-    }
-  });
-};
+import { emailTicketsToUser } from '@functions/sendEmail.ts';
 
 export const POST = async (req: NextRequest) => {
   const { getUser } = getKindeServerSession();
@@ -100,18 +53,20 @@ export const POST = async (req: NextRequest) => {
 
   const result = await db.insert(Tickets).values(tickets).execute();
 
-  await emailTicketsToUser(tickets, user?.email);
-
   console.log('successfully created tickets..', result);
 
   console.log('updating event..');
 
   const event = await db.select().from(Events).where(eq(Events.id, eventId));
 
+  // update the tickets_sold count
   await db
     .update(Events)
     .set({ tickets_sold: event[0]?.tickets_sold ? event[0]?.tickets_sold + amount : amount })
     .where(eq(Events.id, eventId));
+
+  // send email to user
+  await emailTicketsToUser(tickets, user?.email);
 
   return NextResponse.json(result);
 };

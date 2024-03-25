@@ -1,7 +1,5 @@
 import * as React from 'react';
-// @ts-ignore
 import { Html } from '@react-email/html';
-// @ts-ignore
 import { Button } from '@react-email/button';
 import QRCode from 'qrcode.react';
 
@@ -15,6 +13,7 @@ export function Email(props: EmailProps) {
 
   return (
     <Html lang="en">
+      <p>Whoop whoop, your tickets. find them below or click the link.</p>
       <Button href={url}>Go to Tickets</Button>
       {tickets.map((ticket) => {
         return (

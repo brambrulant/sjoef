@@ -143,6 +143,36 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
   };
 
   const currentDate = new Date();
+
+  const getButton = (event: Event) => {
+    if (event.is_sold_out) {
+      return (
+        <Button disabled variant="secondary" className="mt-4">
+          Sold out
+        </Button>
+      );
+    }
+    if (event.price === '0.00') {
+      return (
+        <Button disabled variant="secondary" className="mt-4">
+          Free event
+        </Button>
+      );
+    }
+    if (event.external_ticketing) {
+      return (
+        <Button
+          onClick={() => window.open(event.external_link, '_blank')}
+          variant="secondary"
+          className="mt-4"
+        >
+          Buy tickets (external)
+        </Button>
+      );
+    }
+    return 'Tickets not available';
+  };
+
   return (
     <div className="flex flex-col items-baseline p-8">
       <DrawerHeader className="text-slate-400 font-abc font-bold text-2xl my-2 mx-0 p-0">
@@ -188,19 +218,20 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
         <div className="font-bold text-slate-400">From</div> {event.open}
         <div className="font-bold text-slate-400">until</div> {event.close}
       </DrawerDescription>
-      {!event.is_sold_out && isAfter(event.date, currentDate) && event.price !== '0.00' ? (
+      {!event.is_sold_out &&
+      isAfter(event.date, currentDate) &&
+      event.price !== '0.00' &&
+      !event.external_ticketing ? (
         <DrawerDescription className="text-slate-400 font-abc font-light my-2 max-w-2/3">
           <EventTicketCheckoutForm event={event} />
         </DrawerDescription>
       ) : (
-        <Button disabled variant="secondary" className="mt-4">
-          {event.is_sold_out ? 'Sold out' : event.price === '0.00' ? 'free entrance' : 'N/A'}
-        </Button>
+        getButton(event)
       )}
       {tickets?.length && (
         <DrawerDescription className="text-pink-600 font-abc">
-          <Button onClick={handleRedirectToTickets}>
-            you have {tickets.length} for this event
+          <Button onClick={handleRedirectToTickets} variant="secondary">
+            View {tickets.length} ticket{tickets.length > 1 ? 's' : ''}
           </Button>
         </DrawerDescription>
       )}

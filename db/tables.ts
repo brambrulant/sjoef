@@ -17,6 +17,7 @@ export const Events = pgTable('events', {
   line_up: text('line_up'),
   description: text('description'),
   external_link: text('external_link'),
+  external_ticketing: boolean('external_ticketing'),
 });
 
 export const Tickets = pgTable('tickets', {

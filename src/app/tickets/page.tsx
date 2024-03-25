@@ -1,5 +1,5 @@
 'use client';
-
+import { toBlob } from 'html-to-image';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Ticket } from '../types/ticket.ts';
@@ -16,6 +16,9 @@ import {
 } from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import Loader from '@components/Loader';
+
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import TicketPDF from '@components/Email.tsx';
 
 async function getTickets(): Promise<Ticket[] | null> {
   try {
@@ -44,6 +47,8 @@ interface TicketComponentProps {
 function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   const [bgSize, setBgSize] = React.useState('bg-pos-0');
   const [open, setOpen] = React.useState(false);
+  const [downloadableQrCodeOpen, setDownloadableQrCodeOpen] = React.useState(true);
+  const downloadRef = React.useRef(null);
 
   const handleClicked = React.useCallback(() => {
     setBgSize(poss[Math.floor(Math.random() * poss.length)]);
@@ -54,34 +59,49 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   if (!tickets) return null;
 
   return (
-    <div
-      key={event.id}
-      className={`md:mx-24 mt-4 text-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize}`}
-    >
-      <p>{event.name}</p>
-      <p>{event.date ? format(new Date(event.date), 'dd/MM/yyyy') : 'N/A'}</p>{' '}
-      <p>qt: {tickets.length}</p>
-      <Button className="mt-4" onClick={handleClicked}>
-        show tickets
-      </Button>
-      {open && (
-        <div className="flex flex-col justify-between items-center">
-          {tickets.map((ticket, i) => (
-            <Dialog key={i}>
-              <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
-                <div className="flex flex-row items-center">
-                  <QRCode value={ticket.jwt} />
-                  <p className="ml-4 font-mono">ticket id: {ticket.id}</p>
-                </div>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>ticket id: {ticket.id}</DialogHeader>
-                <QRCode size={300} value={ticket.jwt} />
-              </DialogContent>
-            </Dialog>
-          ))}
+    <div className="w-screen h-screen z-20 bg-slate-950">
+      <div
+        className={`md:mx-24 mt-4 text-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize}`}
+      >
+        <p>{event.name}</p>
+        <p>{event.date ? format(new Date(event.date), 'dd/MM/yyyy') : 'N/A'}</p>{' '}
+        <p>qt: {tickets.length}</p>
+        <div>
+          <Button className="mt-4 mr-4" onClick={handleClicked}>
+            {open ? 'Hide Tickets' : 'Show Tickets'}
+          </Button>
+          <Button className="mt-4">
+            <PDFDownloadLink
+              document={
+                <TicketPDF tickets={tickets} event={event} url="https://www.sjoef.app/tickets" />
+              }
+              fileName={`${event.id}-${tickets[0].id}-${Date.now()}.pdf`}
+            >
+              {({ blob, url, loading, error }) =>
+                loading ? 'Loading document...' : 'Download tickets'
+              }
+            </PDFDownloadLink>
+          </Button>
         </div>
-      )}
+        {open && (
+          <div className="flex z-40 flex-col justify-between items-center">
+            {tickets.map((ticket, i) => (
+              <Dialog key={i}>
+                <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
+                  <div className="flex flex-row items-center">
+                    <QRCode value={ticket.jwt} />
+                    <p className="ml-4 font-mono">ticket id: {ticket.id}</p>
+                  </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>ticket id: {ticket.id}</DialogHeader>
+                  <QRCode size={300} value={ticket.jwt} />
+                </DialogContent>
+              </Dialog>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -107,7 +127,7 @@ export default function Page() {
         <Loader className="text-pink-600 mt-24" size={48} />
       </div>
     );
-  console.log('hello?', allTickets);
+
   if (!allTickets)
     return (
       <div className="flex w-screen justify-center align-middle">

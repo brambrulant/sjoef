@@ -37,7 +37,7 @@ export function Navbar() {
   }, [menuItems, pathname]);
 
   return (
-    <Tabs className="w-screen">
+    <Tabs className="w-screen h-14">
       <div className="font-abc text-2xl text-white absolute ml-4 cursor-pointer">
         <Link href="/events">sjoef.</Link>
       </div>

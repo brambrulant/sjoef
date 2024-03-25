@@ -18,6 +18,13 @@ module.exports = {
       },
     },
     extend: {
+      height: {
+        a4: '297mm',
+        screen: 'calc(100vh - 56px)',
+      },
+      width: {
+        a4: '210mm',
+      },
       fontFamily: {
         abc: ['ABCMonumentGroteskMono', 'sans-serif'],
         sans: ['ABCMonumentGroteskMono', 'sans-serif'],

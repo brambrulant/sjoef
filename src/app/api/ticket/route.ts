@@ -5,13 +5,16 @@ import { eq } from 'drizzle-orm';
 import { sql } from '@vercel/postgres';
 import { Tickets, Events } from '@db/tables.ts';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { emailTicketsToUser } from '@functions/sendEmail.ts';
+import { emailTicketsToUser } from '@functions/sendEmail.tsx';
 
 export const POST = async (req: NextRequest) => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   const db = drizzle(sql);
+
+  console.log('req', req);
+
   const body = await req.json();
 
   const userId = body.userId;
@@ -29,8 +32,6 @@ export const POST = async (req: NextRequest) => {
       }
     );
   }
-
-  console.log('creating tickets..');
 
   const secret = process.env.JWT_SECRET as unknown as jwt.Secret;
 
@@ -51,11 +52,7 @@ export const POST = async (req: NextRequest) => {
     };
   });
 
-  const result = await db.insert(Tickets).values(tickets).execute();
-
-  console.log('successfully created tickets..', result);
-
-  console.log('updating event..');
+  await db.insert(Tickets).values(tickets).execute();
 
   const event = await db.select().from(Events).where(eq(Events.id, eventId));
 
@@ -65,8 +62,9 @@ export const POST = async (req: NextRequest) => {
     .set({ tickets_sold: event[0]?.tickets_sold ? event[0]?.tickets_sold + amount : amount })
     .where(eq(Events.id, eventId));
 
-  // send email to user
-  // await emailTicketsToUser(tickets, user?.email);
+  await emailTicketsToUser(tickets, user?.email);
 
-  return NextResponse.json(result);
+  return NextResponse.json({
+    tickets,
+  });
 };

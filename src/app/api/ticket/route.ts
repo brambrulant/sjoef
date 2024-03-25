@@ -66,7 +66,7 @@ export const POST = async (req: NextRequest) => {
     .where(eq(Events.id, eventId));
 
   // send email to user
-  await emailTicketsToUser(tickets, user?.email);
+  // await emailTicketsToUser(tickets, user?.email);
 
   return NextResponse.json(result);
 };

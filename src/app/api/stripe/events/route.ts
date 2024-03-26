@@ -12,14 +12,11 @@ const makeTicketCallToDatabase = async (eventId: string, amount: string) => {
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
 
-  let sessionId;
   let eventId;
   let amount;
 
   switch (body.type) {
     case 'checkout.session.completed':
-      if (body.data.object.id.startsWith('cs')) sessionId = body.data.object.id;
-
       eventId = body.data.object.metadata.eventId;
       amount = body.data.object.metadata.amount;
       console.log('event from stripe, checkout.session.completed', eventId, amount);

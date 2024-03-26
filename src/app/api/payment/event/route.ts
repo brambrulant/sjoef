@@ -30,6 +30,7 @@ export const POST = async (req: NextRequest) => {
     metadata: {
       eventId: event.id,
       userId: user.id,
+      email: user.email,
       amount: amount,
     },
     customer_email: user.email,

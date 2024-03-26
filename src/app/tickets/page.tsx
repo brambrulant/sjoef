@@ -141,7 +141,7 @@ export default function Page() {
       </div>
     );
 
-  if (!allTickets)
+  if (!allTickets?.length)
     return (
       <div className="flex w-screen justify-center align-middle">
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>

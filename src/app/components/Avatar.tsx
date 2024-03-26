@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@components/ui/avatar.tsx';
-import { KindeUser } from '@kinde-oss/kinde-auth-react/dist/types/state/types';
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/types';
 
 export interface AvatarComponentProps {
   user: KindeUser;

@@ -26,7 +26,7 @@ export const POST = async (req: NextRequest) => {
     // const amount = body.amount;
     // const userId = body.userId;
     // const email = body.email;
-    const eventId = '14';
+    const eventId = 14;
     const amount = 1;
     const email = 'bram@trunkrs.nl';
     const userId = 'kp_7fb74ab55c3347238e0d6763615305e6';

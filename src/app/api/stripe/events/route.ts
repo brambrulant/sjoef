@@ -12,13 +12,21 @@ const makeTicketCallToDatabase = async (
     'valid json?',
     JSON.stringify({ eventId: eventId, amount: amount, userId: userId, email: email })
   );
-  await fetch(`${process.env.BASE_URL}/api/ticket`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ eventId: eventId, amount: amount, userId: userId, email: email }),
-  });
+  await fetch(
+    `${process.env.BASE_URL}/api/ticket` +
+      new URLSearchParams({
+        eventId: eventId,
+        amount: amount,
+        userId: userId,
+        email: email,
+      }),
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  );
 };
 
 export const POST = async (req: NextRequest) => {

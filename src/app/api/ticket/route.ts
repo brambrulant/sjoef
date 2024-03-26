@@ -15,19 +15,18 @@ const getUserName = async (userId: string) => {
 export const POST = async (req: NextRequest) => {
   const db = drizzle(sql);
 
-  console.log('req', req);
-
   try {
-    const body = await req.json();
+    // search params
+    const searchParams = new URLSearchParams(req.url.split('?')[1]);
 
-    console.log('body', body);
+    console.log('searchParams', searchParams);
+    const eventIdAsString = searchParams.get('eventId');
+    const amountAsString = searchParams.get('amount');
+    const userId = searchParams.get('userId');
+    const email = searchParams.get('email');
 
-    const eventId = parseInt(body?.eventId);
-    const amount = parseInt(body?.amount);
-    const userId = body?.userId;
-    const email = body?.email;
-
-    console.log('body', body);
+    const amount = parseInt(amountAsString!);
+    const eventId = parseInt(eventIdAsString!);
 
     if (!userId || !eventId || !amount || !email) {
       console.log('Missing userId, eventId or amount, email');

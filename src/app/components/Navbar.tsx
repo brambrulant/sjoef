@@ -53,7 +53,7 @@ export function Navbar() {
 
   return (
     <Tabs
-      className={`w-screen h-14 bg-white ${opacity}  transition-all duration-1000 fixed z-20 top-0 p-0 rounded-b-md`}
+      className={`w-screen h-14 bg-white ${opacity}  transition-all duration-1000 fixed z-50 top-0 p-0 rounded-b-md`}
     >
       <div className="">
         <div className="font-abc text-2xl h-14 flex flex-row items-center text-white absolute ml-4 cursor-pointer">

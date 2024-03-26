@@ -55,12 +55,12 @@ export default function Events() {
     const currentDate = new Date().setHours(0, 0, 0, 0);
 
     // first sort them, newest first
-    upcomingEvents = events.filter((event) => isAfter(event.date, currentDate));
-    pastEvents = events.filter((event) => isBefore(event.date, currentDate));
+    upcomingEvents = events.filter((event) => isAfter(event?.date!, currentDate));
+    pastEvents = events.filter((event) => isBefore(event?.date!, currentDate));
   }
 
-  upcomingEvents.sort((a, b) => (isAfter(a.date, b.date) ? 1 : -1));
-  pastEvents.sort((a, b) => (isAfter(a.date, b.date) ? -1 : 1));
+  upcomingEvents.sort((a, b) => (isAfter(a?.date!, b.date!) ? 1 : -1));
+  pastEvents.sort((a, b) => (isAfter(a?.date!, b.date!) ? -1 : 1));
 
   const handleEventClick = (id: number) => {
     // Update the URL without navigating away from the page
@@ -96,7 +96,7 @@ export default function Events() {
                 <div key={event.id} className="flex flex-col items-baseline">
                   <div className="text-slate-400 font-abc font-light mt-2">{event.name}</div>
                   <div className="text-pink-600 font-abc">
-                    {formatDate(event.date, 'eeee dd-MM-yyyy')}
+                    {formatDate(event?.date!, 'eeee dd-MM-yyyy')}
                   </div>
                 </div>
               </DrawerTrigger>
@@ -124,7 +124,7 @@ export default function Events() {
             >
               <div className="text-slate-400 font-abc font-light mt-2">{event.name}</div>
               <div className="text-pink-600 font-abc">
-                {formatDate(event.date, 'eeee dd-MM-yyyy')}
+                {formatDate(event?.date!, 'eeee dd-MM-yyyy')}
               </div>
             </div>
           ))}
@@ -162,7 +162,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
     if (event.external_ticketing) {
       return (
         <Button
-          onClick={() => window.open(event.external_link, '_blank')}
+          onClick={() => window.open(event?.external_link!, '_blank')}
           variant="secondary"
           className="mt-4"
         >
@@ -179,7 +179,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
         {event.name}
       </DrawerHeader>
       <DrawerHeader className="text-pink-600 font-abc mx-0 p-0 mb-8">
-        {formatDate(event?.date, 'eeee dd-MM-yyyy')}
+        {formatDate(event?.date!, 'eeee dd-MM-yyyy')}
       </DrawerHeader>
       <DrawerDescription className="text-slate-400 font-abc font-light my-2">
         {event.genre}
@@ -219,7 +219,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
         <div className="font-bold text-slate-400">until</div> {event.close}
       </DrawerDescription>
       {!event.is_sold_out &&
-      isAfter(event.date, currentDate) &&
+      isAfter(event?.date!, currentDate) &&
       event.price !== '0.00' &&
       !event.external_ticketing ? (
         <DrawerDescription className="text-slate-400 font-abc font-light my-2 max-w-2/3">

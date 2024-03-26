@@ -1,5 +1,4 @@
 'use client';
-import { toBlob } from 'html-to-image';
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Ticket } from '../types/ticket.ts';
@@ -7,18 +6,13 @@ import { Event } from '../types/event.ts';
 import { format } from 'date-fns';
 import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTrigger,
-} from '@components/ui/dialog.tsx';
+import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import Loader from '@components/Loader';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import TicketPDF from '@components/Email.tsx';
+import QRCodeGenerator from '@components/QRCodeGenerator.tsx';
 
 async function getTickets(): Promise<Ticket[] | null> {
   try {
@@ -46,17 +40,25 @@ interface TicketComponentProps {
 
 function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   const [bgSize, setBgSize] = React.useState('bg-pos-0');
-  const [open, setOpen] = React.useState(false);
-  const [downloadableQrCodeOpen, setDownloadableQrCodeOpen] = React.useState(true);
-  const downloadRef = React.useRef(null);
+  const [open, setOpen] = React.useState(true);
+  const [qrCodes, setQrCodes] = React.useState<string[]>([]);
 
   const handleClicked = React.useCallback(() => {
     setBgSize(poss[Math.floor(Math.random() * poss.length)]);
     setOpen(!open);
   }, [open, poss]);
 
+  React.useEffect(() => {
+    const qrCodes = tickets.map((ticket) => {
+      const element = document.getElementById(ticket.id) as HTMLCanvasElement;
+      return element?.toDataURL();
+    });
+    setQrCodes(qrCodes);
+  }, [tickets]);
+
   if (!event) return null;
   if (!tickets) return null;
+  if (!qrCodes) return null;
 
   return (
     <div className="w-screen h-screen z-20 bg-slate-950">
@@ -73,7 +75,12 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
           <Button className="mt-4">
             <PDFDownloadLink
               document={
-                <TicketPDF tickets={tickets} event={event} url="https://www.sjoef.app/tickets" />
+                <TicketPDF
+                  tickets={tickets}
+                  event={event}
+                  url="https://www.sjoef.app/tickets"
+                  qrCodeStrings={qrCodes}
+                />
               }
               fileName={`${event.id}-${tickets[0].id}-${Date.now()}.pdf`}
             >
@@ -89,13 +96,13 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
               <Dialog key={i}>
                 <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
                   <div className="flex flex-row items-center">
-                    <QRCode value={ticket.jwt} />
+                    <QRCodeGenerator value={ticket.jwt} id={ticket.id} />
                     <p className="ml-4 font-mono">ticket id: {ticket.id}</p>
                   </div>
                 </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>ticket id: {ticket.id}</DialogHeader>
-                  <QRCode size={300} value={ticket.jwt} />
+                  <QRCodeGenerator size={600} value={ticket.jwt} id={ticket.id} />
                 </DialogContent>
               </Dialog>
             ))}

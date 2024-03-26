@@ -5,19 +5,16 @@ import {
   Text,
   View,
   StyleSheet,
-  Font,
   Svg,
   Path,
   Link,
   LinearGradient,
   Defs,
   Stop,
+  Image,
 } from '@react-pdf/renderer';
 import { Ticket } from '../types/ticket.ts';
 import { Event } from '../types/event.ts';
-import ReactHtmlParser from 'react-html-parser';
-import QRCode from 'qrcode.react';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { format } from 'date-fns';
 
 const styles = StyleSheet.create({
@@ -34,6 +31,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 12,
+    color: '#cbd5e1',
   },
   background: {
     position: 'absolute',
@@ -63,34 +61,11 @@ const styles = StyleSheet.create({
     width: 400,
     height: 400,
   },
+  link: {
+    fontSize: 12,
+    color: '#cbd5e1',
+  },
 });
-
-export interface TicketPDFProps {
-  tickets: Ticket[];
-  event: Event;
-  url: string;
-}
-
-const parseQrCodeMarkup = (
-  markup: string
-): React.ReactElement<any, string | React.JSXElementConstructor<any>> | null => {
-  let parsedQrCodeSvg = null;
-  ReactHtmlParser(markup).forEach((el) => {
-    const { type } = el;
-    if (type === 'svg') {
-      parsedQrCodeSvg = el;
-    }
-  });
-
-  return parsedQrCodeSvg;
-};
-
-const qrCodeComponent = (ticket: Ticket) => {
-  const component = <QRCode value={ticket.jwt} renderAs="svg" width={300} height={300} />;
-
-  const qrCodeComponentStaticMarkup = renderToStaticMarkup(component);
-  return parseQrCodeMarkup(qrCodeComponentStaticMarkup);
-};
 
 const SvgBackground = () => (
   <Svg style={styles.background}>
@@ -105,32 +80,39 @@ const SvgBackground = () => (
   </Svg>
 );
 
-export const TicketPDF = ({ tickets, event, url }: TicketPDFProps) => {
+export interface TicketPDFProps {
+  tickets: Ticket[];
+  qrCodeStrings?: string[];
+  event?: Event;
+  url: string;
+}
+
+function TicketPDF({ tickets, event, qrCodeStrings, url }: TicketPDFProps) {
+  if (!tickets || !event || !qrCodeStrings?.length) return null;
   return (
     <Document>
-      {tickets.map((ticket, i) => (
-        <Page key={i} size="A4" style={styles.page}>
+      {tickets?.map((ticket, i) => (
+        <Page key={ticket.id} size="A4" style={styles.page}>
           <View style={styles.section}>
             <SvgBackground />
             <View style={styles.innerSection}>
               <Text style={styles.header}>Sjoef. </Text>
-              <Text style={styles.text}>{event.name}</Text>
-              <Link href={`https://www.sjoef.com/events?id=${event.id}`}>Link to event</Link>
-              <Text style={styles.text}>{format(event.date!, 'dd-MM-yyyy')}</Text>
+              <Text style={styles.text}>{event?.name}</Text>
+              <Link style={styles.link} href={`https://www.sjoef.com/events?id=${event?.id}`}>
+                Link to event
+              </Link>
+              <Text style={styles.text}>{format(event?.date!, 'dd-MM-yyyy')}</Text>
               <Text style={styles.text}>ticket id: {ticket.id}</Text>
-              <Svg style={styles.svg} viewBox="0 0 60 60">
-                {qrCodeComponent(ticket)!
-                  .props.children.filter((c: React.ReactElement) => c.type === 'path')
-                  .map((child: React.ReactElement, index: number) => (
-                    <Path key={index} d={child.props.d} fill={child.props.fill} />
-                  ))}
-              </Svg>
+              <Image
+                src={qrCodeStrings[i]}
+                style={{ width: 300, height: 300, margin: 'auto', marginTop: '128px' }}
+              />
             </View>
           </View>
         </Page>
       ))}
     </Document>
   );
-};
+}
 
 export default TicketPDF;

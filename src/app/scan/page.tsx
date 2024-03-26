@@ -38,7 +38,7 @@ function Page() {
   return (
     <div className="">
       <QrReader
-        className="w-1/2 h-1/2 m-auto rounded-xl"
+        className="w-2/3 h-2/3 m-auto rounded-xl mt-24 bg-pink-600"
         constraints={{ facingMode: 'environment' }}
         videoContainerStyle={{ width: '100%' }}
         onResult={handleScan}
@@ -49,7 +49,7 @@ function Page() {
           {ticketResult?.ticket[0].id}
         </p>
       ) : (
-        <div className={`bg-red-500 w-1/2 h-40 m-auto mt-4 rounded-xl flex align-center`}>
+        <div className={`bg-red-500 w-2/3 h-40 m-auto mt-4 rounded-xl flex align-center`}>
           <p className="m-auto">No ticket found</p>
         </div>
       )}

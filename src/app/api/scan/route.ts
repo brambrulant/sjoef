@@ -17,7 +17,7 @@ export const POST = async (req: NextRequest) => {
   if (decoded) {
     const ticket = await db.select().from(Tickets).where(eq(Tickets.id, decoded.ticket_id));
 
-    if (!ticket[0].is_used) {
+    if (ticket[0].is_used) {
       return NextResponse.json(
         {
           message: 'Ticket is already used',

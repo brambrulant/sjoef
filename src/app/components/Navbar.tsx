@@ -71,11 +71,6 @@ export function Navbar() {
                   <Link href={'/admin'}>Admin</Link>
                 </Button>
               )}
-              {user && (
-                <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
-                  <Link href={'/tickets'}>My Tickets</Link>
-                </Button>
-              )}
               <Button className="w-full bg-transparent border-2 border-transparent font-abc text-black hover:text-white">
                 {!user ? <LoginLink>Log in</LoginLink> : <LogoutLink>Log Out</LogoutLink>}
               </Button>

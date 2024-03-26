@@ -4,6 +4,7 @@ import { Event } from '../../types/event.ts';
 
 import { Button } from '@components/ui/button.tsx';
 import { LoginLink, useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { MinusIcon, PlusIcon } from '@radix-ui/react-icons';
 
 export interface EventTicketCheckoutFormProps {
   event: Event;
@@ -49,7 +50,7 @@ export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = (
         onClick={() => setCounter(counter < 1 ? counter : counter - 1)}
         className="my-4 bg-slate-400 hover:bg-slate-300 border-black border-1"
       >
-        <p className="text-slate-900">-</p>
+        <MinusIcon />
       </Button>
       <Button
         onClick={handleBuyTickets}
@@ -66,7 +67,7 @@ export const EventTicketCheckoutForm: React.FC<EventTicketCheckoutFormProps> = (
         onClick={() => setCounter(counter + 1)}
         className="my-4 bg-slate-400 hover:bg-slate-300 border-black border-1"
       >
-        <p className="text-slate-900">+</p>
+        <PlusIcon />
       </Button>
     </div>
   );

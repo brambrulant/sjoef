@@ -13,6 +13,7 @@ import { DrawerContent } from '@components/ui/drawer-vertical.tsx';
 import EventTicketCheckoutForm from '@components/CheckoutForm/EventTicketCheckoutForm.tsx';
 import { Button } from '@components/ui/button.tsx';
 import { ScrollArea } from '@components/ui/scroll-area.tsx';
+import { ExternalLinkIcon, InstagramLogoIcon } from '@radix-ui/react-icons';
 
 async function getEvents(): Promise<Event[]> {
   return await fetch('/api/events').then((res) => res.json());
@@ -193,7 +194,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
       <DrawerDescription className="text-pink-600 font-abc">
         {event.external_link ? (
           <a href={event.external_link} target="_blank" rel="noreferrer" className="underline">
-            More info
+            <ExternalLinkIcon />
           </a>
         ) : (
           <a
@@ -202,7 +203,7 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
             rel="noreferrer"
             className="underline"
           >
-            IG
+            <InstagramLogoIcon fontSize={48} />
           </a>
         )}
       </DrawerDescription>
@@ -228,13 +229,13 @@ function EventDetails({ event, tickets }: { event?: Event; tickets?: Ticket[] })
       ) : (
         getButton(event)
       )}
-      {tickets?.length && (
+      {tickets?.length ? (
         <DrawerDescription className="text-pink-600 font-abc">
           <Button onClick={handleRedirectToTickets} variant="secondary">
             View {tickets.length} ticket{tickets.length > 1 ? 's' : ''}
           </Button>
         </DrawerDescription>
-      )}
+      ) : null}
     </div>
   );
 }

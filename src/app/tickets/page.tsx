@@ -1,9 +1,11 @@
 'use client';
 import React from 'react';
+import { DownloadIcon, EyeClosedIcon, EyeOpenIcon } from '@radix-ui/react-icons';
+
 import { useQuery } from '@tanstack/react-query';
 import { Ticket } from '../types/ticket.ts';
 import { Event } from '../types/event.ts';
-import { format } from 'date-fns';
+import { addDays, format, isAfter } from 'date-fns';
 import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
@@ -39,7 +41,7 @@ interface TicketComponentProps {
 }
 
 function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
-  const [bgSize, setBgSize] = React.useState('bg-pos-0');
+  const [bgSize, setBgSize] = React.useState(poss[Math.floor(Math.random() * poss.length)]);
   const [open, setOpen] = React.useState(true);
   const [qrCodes, setQrCodes] = React.useState<string[]>([]);
 
@@ -60,19 +62,25 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   if (!tickets) return null;
   if (!qrCodes) return null;
 
+  console.log(new Date(event.date!), addDays(new Date(), 1));
+
+  const eventHasPassed = isAfter(addDays(new Date(), 1), event.date!);
+
+  console.log(eventHasPassed);
+
   return (
-    <div className="w-screen h-screen z-20 bg-slate-950">
+    <div className="w-screen z-20 bg-slate-950">
       <div
-        className={`md:mx-24 mt-4 text-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize}`}
+        className={`mx-8 md:mx-24 mt-4 text-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize} ${eventHasPassed && 'opacity-50'}`}
       >
         <p>{event.name}</p>
         <p>{event.date ? format(new Date(event.date), 'dd/MM/yyyy') : 'N/A'}</p>{' '}
         <p>qt: {tickets.length}</p>
         <div>
-          <Button className="mt-4 mr-4" onClick={handleClicked}>
-            {open ? 'Hide Tickets' : 'Show Tickets'}
+          <Button className="mt-4 mr-4" onClick={handleClicked} disabled={eventHasPassed}>
+            {open ? <EyeClosedIcon /> : <EyeOpenIcon />}
           </Button>
-          <Button className="mt-4">
+          <Button className="mt-4" disabled={eventHasPassed}>
             <PDFDownloadLink
               document={
                 <TicketPDF
@@ -84,22 +92,24 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
               }
               fileName={`${event.id}-${tickets[0].id}-${Date.now()}.pdf`}
             >
-              {({ blob, url, loading, error }) =>
-                loading ? 'Loading document...' : 'Download tickets'
-              }
+              {({ blob, url, loading, error }) => (loading ? <Loader /> : <DownloadIcon />)}
             </PDFDownloadLink>
           </Button>
         </div>
-        {open && (
+        {open && !eventHasPassed && (
           <div className="flex z-40 flex-col justify-between items-center">
             {tickets.map((ticket, i) => (
               <Dialog key={i}>
                 <DialogTrigger
-                  disabled={ticket.is_used}
+                  disabled={ticket.is_used || eventHasPassed}
                   className={`flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors ${ticket.is_used && 'bg-red-600 hover:bg-red-600 hover:bg-opacity-100'}`}
                 >
                   <div className={`flex flex-row items-center`}>
-                    <QRCodeGenerator value={ticket.jwt} id={ticket.id} disabled={ticket.is_used} />
+                    <QRCodeGenerator
+                      value={ticket.jwt}
+                      id={ticket.id}
+                      disabled={ticket.is_used || eventHasPassed}
+                    />
                     <div className="flex flex-col">
                       <p className="ml-4 font-abc">ticket id: {ticket.id}</p>
                       {ticket.is_used && <p className="ml-4 font-abc">ticket is scanned</p>}
@@ -148,9 +158,15 @@ export default function Page() {
       </div>
     );
 
+  const sortedEventsFromNewestToOldest = events?.sort((a, b) => {
+    if (a.date! > b.date!) return -1;
+    if (a.date! < b.date!) return 1;
+    return 0;
+  });
+
   return (
     <div className="w-full flex flex-col justify-between">
-      {events?.map(
+      {sortedEventsFromNewestToOldest?.map(
         (event) =>
           allTickets?.filter((ticket) => ticket.event_id === event?.id).length > 0 && (
             <TicketComponent

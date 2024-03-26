@@ -6,7 +6,6 @@ import { useQuery } from '@tanstack/react-query';
 import { Ticket } from '../types/ticket.ts';
 import { Event } from '../types/event.ts';
 import { addDays, format, isAfter } from 'date-fns';
-import QRCode from 'qrcode.react';
 import { Button } from '@components/ui/button.tsx';
 import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@components/ui/dialog.tsx';
 import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
@@ -153,7 +152,7 @@ export default function Page() {
 
   if (!allTickets?.length)
     return (
-      <div className="flex w-screen justify-center align-middle">
+      <div className="flex bg-blend-color w-screen h-screen bg-gif bg-no-repeat bg-top bg-opacity-40 backdrop-blur-2xl justify-center align-middle">
         <div className="mt-16 font-mono text-slate-200">{"you don't have any tickets yet.."}</div>
       </div>
     );

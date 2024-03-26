@@ -76,7 +76,7 @@ export default function Events() {
   };
 
   return (
-    <div className="p-4 w-screen">
+    <div className="p-4 w-screen mt-12">
       <p className="text-slate-400 font-abc text-2xl md:text-9xl ml-[-12px]">UPCOMING</p>
       <div className="w-full">
         {isLoading ? (

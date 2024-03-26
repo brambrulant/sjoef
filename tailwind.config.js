@@ -45,6 +45,7 @@ module.exports = {
       },
       backgroundSize: {
         'size-200': '200% 200%',
+        'custom-zoom': '70%',
       },
       backgroundPosition: {
         'pos-0': '0% 0%',
@@ -53,6 +54,9 @@ module.exports = {
         'pos-60': '60% 60%',
         'pos-80': '80% 80%',
         'pos-100': '100% 100%',
+      },
+      backgroundImage: {
+        gif: 'url(/images/sjoef.gif)',
       },
     },
   },

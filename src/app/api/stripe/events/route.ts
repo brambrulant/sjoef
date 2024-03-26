@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const makeTicketCallToDatabase = async (eventId: string, amount: string) => {
+  console.log('making ticket call to database');
+  console.log('eventId', eventId);
   await fetch(`${process.env.BASE_URL}/api/ticket`, {
     method: 'POST',
     headers: {
@@ -14,7 +16,6 @@ const makeTicketCallToDatabase = async (eventId: string, amount: string) => {
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
-
   let eventId;
   let amount;
 

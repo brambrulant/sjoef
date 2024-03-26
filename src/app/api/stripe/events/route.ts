@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-const makeTicketCallToDatabase = async (userId: string, eventId: string, amount: string) => {
+const makeTicketCallToDatabase = async (eventId: string, amount: string) => {
   await fetch(`${process.env.BASE_URL}/api/ticket`, {
     method: 'POST',
-    body: JSON.stringify({ userId: userId, eventId: eventId, amount: amount }),
+    body: JSON.stringify({ eventId: eventId, amount: amount }),
   });
 };
 
@@ -14,7 +14,6 @@ export const POST = async (req: NextRequest) => {
 
   let sessionId;
   let eventId;
-  let userId;
   let amount;
 
   switch (body.type) {
@@ -22,14 +21,13 @@ export const POST = async (req: NextRequest) => {
       if (body.data.object.id.startsWith('cs')) sessionId = body.data.object.id;
 
       eventId = body.data.object.metadata.eventId;
-      userId = body.data.object.metadata.userId;
       amount = body.data.object.metadata.amount;
-      await makeTicketCallToDatabase(userId, eventId, amount);
+      console.log('event from stripe, checkout.session.completed', eventId, amount);
+      await makeTicketCallToDatabase(eventId, amount);
       break;
     default:
       console.log('event from stripe, unimportant');
   }
 
-  // const result = await db.insert(Events).values(event);
-  return NextResponse.json('hoi');
+  return NextResponse.json('hello stripe');
 };

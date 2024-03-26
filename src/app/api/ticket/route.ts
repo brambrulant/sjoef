@@ -17,11 +17,10 @@ export const POST = async (req: NextRequest) => {
 
   const body = await req.json();
 
-  const userId = body.userId;
   const eventId = body.eventId;
   const amount = parseInt(body.amount);
 
-  if (!userId || !eventId || !amount) {
+  if (!user?.id || !eventId || !amount) {
     console.log('Missing userId, eventId or amount');
     return NextResponse.json(
       {
@@ -38,14 +37,14 @@ export const POST = async (req: NextRequest) => {
   const tickets = Array.from({ length: amount }, () => {
     const payload = {
       event_id: eventId,
-      user_id: userId,
+      user_id: user?.id,
     };
 
     const token = jwt.sign(payload, secret);
 
     return {
       event_id: eventId,
-      user_id: userId,
+      user_id: user?.id,
       jwt: token,
       created_at: new Date(),
       updated_at: new Date(),

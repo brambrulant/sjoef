@@ -6,27 +6,25 @@ const makeTicketCallToDatabase = async (
   userId: string,
   email: string
 ) => {
-  console.log('making ticket call to database');
-  console.log('eventId', eventId);
-  console.log(
-    'valid json?',
-    JSON.stringify({ eventId: eventId, amount: amount, userId: userId, email: email })
-  );
-  await fetch(
-    `${process.env.BASE_URL}/api/ticket` +
-      new URLSearchParams({
-        eventId: eventId,
-        amount: amount,
-        userId: userId,
-        email: email,
-      }),
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  );
+  try {
+    await fetch(
+      `https://www.sjoef.app/api/ticket` +
+        new URLSearchParams({
+          eventId: eventId,
+          amount: amount,
+          userId: userId,
+          email: email,
+        }),
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  } catch (error) {
+    console.log('error', error);
+  }
 };
 
 export const POST = async (req: NextRequest) => {
@@ -38,6 +36,7 @@ export const POST = async (req: NextRequest) => {
 
   switch (body.type) {
     case 'checkout.session.completed':
+      console.log('metadata', body.data.object.metadata);
       eventId = body.data.object.metadata.eventId;
       amount = body.data.object.metadata.amount;
       email = body.data.object.metadata.email;

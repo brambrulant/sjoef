@@ -94,10 +94,16 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
           <div className="flex z-40 flex-col justify-between items-center">
             {tickets.map((ticket, i) => (
               <Dialog key={i}>
-                <DialogTrigger className="flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors">
-                  <div className="flex flex-row items-center">
-                    <QRCodeGenerator value={ticket.jwt} id={ticket.id} />
-                    <p className="ml-4 font-mono">ticket id: {ticket.id}</p>
+                <DialogTrigger
+                  disabled={ticket.is_used}
+                  className={`flex my-2 flex-row justify-center align-middle cursor-pointer border-2 border-black p-4 rounded-xl hover:bg-opacity-50 hover:bg-slate-950 transition-colors ${ticket.is_used && 'bg-red-600 hover:bg-red-600 hover:bg-opacity-100'}`}
+                >
+                  <div className={`flex flex-row items-center`}>
+                    <QRCodeGenerator value={ticket.jwt} id={ticket.id} disabled={ticket.is_used} />
+                    <div className="flex flex-col">
+                      <p className="ml-4 font-abc">ticket id: {ticket.id}</p>
+                      {ticket.is_used && <p className="ml-4 font-abc">ticket is scanned</p>}
+                    </div>
                   </div>
                 </DialogTrigger>
                 <DialogContent>

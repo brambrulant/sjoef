@@ -5,6 +5,7 @@ export interface QRGeneratorProps {
   id: string;
   value: string;
   size?: number;
+  disabled?: boolean;
 }
 
 function QRCodeGenerator(props: QRGeneratorProps) {
@@ -15,7 +16,7 @@ function QRCodeGenerator(props: QRGeneratorProps) {
         id={id}
         value={value}
         size={props.size || 128}
-        bgColor="#fff"
+        bgColor={props.disabled ? '#6b6b6b' : '#fff'}
         fgColor="#000"
         level={'H'}
         style={{

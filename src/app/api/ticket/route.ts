@@ -18,14 +18,18 @@ export const POST = async (req: NextRequest) => {
   console.log('req', req);
 
   try {
-    const body = await req.json();
+    // const body = await req.json();
 
-    console.log('body', body);
-
-    const eventId = body.eventId;
-    const amount = body.amount;
-    const userId = body.userId;
-    const email = body.email;
+    // console.log('body', body);
+    //
+    // const eventId = body.eventId;
+    // const amount = body.amount;
+    // const userId = body.userId;
+    // const email = body.email;
+    const eventId = '14';
+    const amount = '1';
+    const email = 'bram@trunkrs.nl';
+    const userId = 'kp_7fb74ab55c3347238e0d6763615305e6';
 
     if (!userId || !eventId || !amount || !email) {
       console.log('Missing userId, eventId or amount, email');

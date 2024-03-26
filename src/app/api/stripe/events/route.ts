@@ -6,6 +6,12 @@ import { emailTicketsToUser } from '@functions/sendEmail.tsx';
 import { sql } from '@vercel/postgres';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 
+export interface JWTPayload {
+  event_id: number;
+  user_id: string;
+  ticket_id: number;
+}
+
 const getUserName = async (userId: string) => {
   const db = drizzle(sql);
   const user = await db.select().from(Users).where(eq(Users.id, userId));
@@ -30,7 +36,7 @@ const createTickets = async (eventId: number, amount: number, userId: string, em
 
   // Step 2: Generate JWT for each ticket and update them in the DB
   for (const ticket of insertedTickets) {
-    const payload = {
+    const payload: JWTPayload = {
       event_id: eventId,
       user_id: userId,
       ticket_id: ticket.id,

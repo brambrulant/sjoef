@@ -23,7 +23,7 @@ export const POST = async (req: NextRequest) => {
     console.log('body', body);
 
     const eventId = body.eventId;
-    const amount = parseInt(body.amount);
+    const amount = body.amount;
     const userId = body.userId;
     const email = body.email;
 

@@ -14,59 +14,71 @@ export const POST = async (req: NextRequest) => {
   const db = drizzle(sql);
 
   console.log('req', req);
-
-  const body = await req.json();
-
-  console.log('body', body);
   console.log('user', user);
 
-  const eventId = body.eventId;
-  const amount = parseInt(body.amount);
+  try {
+    const body = await req.json();
 
-  if (!user?.id || !eventId || !amount) {
-    console.log('Missing userId, eventId or amount');
+    console.log('body', body);
+
+    const eventId = body.eventId;
+    const amount = parseInt(body.amount);
+
+    if (!user?.id || !eventId || !amount) {
+      console.log('Missing userId, eventId or amount');
+      return NextResponse.json(
+        {
+          error: 'Missing userId, eventId or amount',
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const secret = process.env.JWT_SECRET as unknown as jwt.Secret;
+
+    const tickets = Array.from({ length: amount }, () => {
+      const payload = {
+        event_id: eventId,
+        user_id: user?.id,
+      };
+
+      const token = jwt.sign(payload, secret);
+
+      return {
+        event_id: eventId,
+        user_id: user?.id,
+        jwt: token,
+        created_at: new Date(),
+        updated_at: new Date(),
+      };
+    });
+
+    await db.insert(Tickets).values(tickets).execute();
+
+    const event = await db.select().from(Events).where(eq(Events.id, eventId));
+
+    // update the tickets_sold count
+    await db
+      .update(Events)
+      .set({ tickets_sold: event[0]?.tickets_sold ? event[0]?.tickets_sold + amount : amount })
+      .where(eq(Events.id, eventId));
+
+    await emailTicketsToUser(tickets, user?.email);
+
+    return NextResponse.json({
+      tickets,
+    });
+  } catch (error) {
+    console.error('Error:', error);
     return NextResponse.json(
       {
-        error: 'Missing userId, eventId or amount',
+        error: 'Error',
       },
       {
-        status: 400,
+        status: 500,
       }
     );
   }
-
-  const secret = process.env.JWT_SECRET as unknown as jwt.Secret;
-
-  const tickets = Array.from({ length: amount }, () => {
-    const payload = {
-      event_id: eventId,
-      user_id: user?.id,
-    };
-
-    const token = jwt.sign(payload, secret);
-
-    return {
-      event_id: eventId,
-      user_id: user?.id,
-      jwt: token,
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-  });
-
-  await db.insert(Tickets).values(tickets).execute();
-
-  const event = await db.select().from(Events).where(eq(Events.id, eventId));
-
-  // update the tickets_sold count
-  await db
-    .update(Events)
-    .set({ tickets_sold: event[0]?.tickets_sold ? event[0]?.tickets_sold + amount : amount })
-    .where(eq(Events.id, eventId));
-
-  await emailTicketsToUser(tickets, user?.email);
-
-  return NextResponse.json({
-    tickets,
-  });
 };

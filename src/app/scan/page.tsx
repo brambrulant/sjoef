@@ -27,7 +27,7 @@ function Page() {
     enabled: !!qrData,
   });
 
-  const handleScan = (result, error) => {
+  const handleScan = (result: any, error: any) => {
     if (result) {
       setQrData(result);
     }

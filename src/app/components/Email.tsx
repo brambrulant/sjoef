@@ -1,118 +1,89 @@
-import React from 'react';
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Svg,
-  Path,
-  Link,
-  LinearGradient,
-  Defs,
-  Stop,
-  Image,
-} from '@react-pdf/renderer';
+import { Body, Button, Container, Head, Hr, Html, Preview, Section, Text } from 'jsx-email';
+import * as React from 'react';
 import { Ticket } from '../types/ticket.ts';
 import { Event } from '../types/event.ts';
 import { format } from 'date-fns';
 
-const styles = StyleSheet.create({
-  page: {
-    position: 'absolute',
-    flexDirection: 'row',
-    margin: '1rem auto', // equivalent to 'mt-4'
-    textAlign: 'center', // equivalent to 'text-center'
-    padding: '2rem', // equivalent to 'p-8'
-  },
-  header: {
-    fontSize: 24,
-    marginLeft: 'auto',
-  },
-  text: {
-    fontSize: 12,
-    color: '#cbd5e1',
-  },
-  background: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-  },
-  section: {
-    position: 'absolute', // Position content absolutely
-    top: 0, // Adjust top, right, bottom, left as needed to fit your content layout
-    left: 0,
-    right: 0,
-    bottom: 0,
-  },
-  innerSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start', // Center content vertically
-    alignItems: 'flex-start', // Center content horizontally
-    padding: 20,
-  },
-  svg: {
-    padding: 10,
-    margin: 'auto',
-    fontSize: 48,
-    width: 400,
-    height: 400,
-  },
-  link: {
-    fontSize: 12,
-    color: '#cbd5e1',
-  },
-});
+interface TicketEmailProps {
+  tickets: Ticket[];
+  event: Event;
+  userFirstname: string;
+}
 
-const SvgBackground = () => (
-  <Svg style={styles.background}>
-    <Defs>
-      <LinearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
-        <Stop offset="0%" stopColor="#1a365d" stopOpacity="1" />
-        <Stop offset="50%" stopColor="#ed64a6" stopOpacity="1" />
-        <Stop offset="100%" stopColor="#ed64a6" stopOpacity="1" />
-      </LinearGradient>
-    </Defs>
-    <Path d="M0 0 H595.28 V841.89 H0 Z" fill="url(#grad1)" />
-  </Svg>
+export const TicketEmail = ({ tickets, event, userFirstname }: TicketEmailProps) => (
+  <Html>
+    <Head />
+    <Body style={gradientBackground}>
+      <Container style={container}>
+        <Text>From Sjoef.</Text>
+        <Text style={paragraph}>Hi {userFirstname},</Text>
+        <Text style={paragraph}>
+          Whoop whoop, your tickets for {event.name} on {format(event.date!, 'dd-MM-yyyy')}. See you
+          there!
+        </Text>
+        <Section style={btnContainer}>
+          <Button style={button} href="https://www.sjoef.app/tickets">
+            Find your tickets here
+          </Button>
+        </Section>
+        <Text style={paragraph}>
+          Love,
+          <br />
+          Sjoef team
+        </Text>
+        <Hr style={hr} />
+        <Text style={footer}>Ask your network for location..</Text>
+      </Container>
+    </Body>
+  </Html>
 );
 
-export interface TicketPDFProps {
-  tickets: Ticket[];
-  qrCodeStrings?: string[];
-  event?: Event;
-  url: string;
-}
+export default TicketEmail;
 
-function TicketPDF({ tickets, event, qrCodeStrings, url }: TicketPDFProps) {
-  if (!tickets || !event || !qrCodeStrings?.length) return null;
-  return (
-    <Document>
-      {tickets?.map((ticket, i) => (
-        <Page key={ticket.id} size="A4" style={styles.page}>
-          <View style={styles.section}>
-            <SvgBackground />
-            <View style={styles.innerSection}>
-              <Text style={styles.header}>Sjoef. </Text>
-              <Text style={styles.text}>{event?.name}</Text>
-              <Link style={styles.link} href={`https://www.sjoef.com/events?id=${event?.id}`}>
-                Link to event
-              </Link>
-              <Text style={styles.text}>{format(event?.date!, 'dd-MM-yyyy')}</Text>
-              <Text style={styles.text}>ticket id: {ticket.id}</Text>
-              <Image
-                src={qrCodeStrings[i]}
-                style={{ width: 300, height: 300, margin: 'auto', marginTop: '128px' }}
-              />
-            </View>
-          </View>
-        </Page>
-      ))}
-    </Document>
-  );
-}
+const gradientBackground = {
+  borderRadius: '6px',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  backgroundSize: '200% 200%', // Equivalent to bg-size-200
+  animation: 'gradientX 1s infinite', // Custom animation equivalent to animate-gradient-x
+  transition: 'all 1s', // Equivalent to transition-all duration-1000
+  backgroundImage: 'linear-gradient(to right, #2c5282, #fbcfe8, #f687b3)', // Equivalent to bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600
+};
 
-export default TicketPDF;
+const keyframes = `@keyframes gradientX {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}`;
+
+const container = {
+  margin: '0 auto',
+  padding: '20px 0 48px',
+};
+
+const paragraph = {};
+
+const btnContainer = {
+  textAlign: 'center' as const,
+};
+
+const button = {
+  backgroundColor: '#db2777',
+  borderRadius: '6px',
+  color: '#fff',
+  fontSize: '16px',
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'block',
+  padding: '12px',
+};
+
+const hr = {
+  borderColor: '#cccccc',
+  margin: '20px 0',
+};
+
+const footer = {
+  color: '#8898aa',
+  fontSize: '12px',
+};

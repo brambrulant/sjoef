@@ -1,20 +1,20 @@
 import * as React from 'react';
 import nodemailer from 'nodemailer';
-import { renderAsync } from '@react-email/render';
+import { render } from 'jsx-email';
+
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { sql } from '@vercel/postgres';
 import { eq } from 'drizzle-orm';
 
 import { Events } from '@db/tables.ts';
-import TicketPDF from '@components/Email.tsx';
-import { Ticket } from '../types/ticket.ts';
+import TicketEmail from '@components/Email.tsx';
 
 const getEvent = async (eventId: number) => {
   const db = drizzle(sql);
   return db.select().from(Events).where(eq(Events.id, eventId));
 };
 
-export const emailTicketsToUser = async (tickets: any, email?: string | null) => {
+export const emailTicketsToUser = async (tickets: any, userName: string, email?: string | null) => {
   const event = await getEvent(tickets[0].event_id);
   const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -31,16 +31,13 @@ export const emailTicketsToUser = async (tickets: any, email?: string | null) =>
     return;
   }
 
-  const EmailHtml = await renderAsync(
-    <TicketPDF tickets={tickets} event={event[0]} url="https://www.sjoef.app/tickets" />,
-    {}
-  );
+  console.log('Sending email to: ', email, 'with event', event[0]);
 
   const mailOptions = {
     from: 'sjoefbar@gmail.com',
     to: email,
     subject: `Your tickets for ${event[0]?.name}`,
-    html: EmailHtml,
+    html: await render(<TicketEmail userFirstname={userName} tickets={tickets} event={event[0]} />),
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {

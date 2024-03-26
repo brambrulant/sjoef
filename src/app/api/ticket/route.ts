@@ -3,18 +3,19 @@ import jwt from 'jsonwebtoken';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 import { eq } from 'drizzle-orm';
 import { sql } from '@vercel/postgres';
-import { Tickets, Events } from '@db/tables.ts';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { Tickets, Events, Users } from '@db/tables.ts';
 import { emailTicketsToUser } from '@functions/sendEmail.tsx';
 
-export const POST = async (req: NextRequest) => {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+const getUserName = async (userId: string) => {
+  const db = drizzle(sql);
+  const user = await db.select().from(Users).where(eq(Users.id, userId));
+  return user[0]?.name;
+};
 
+export const POST = async (req: NextRequest) => {
   const db = drizzle(sql);
 
   console.log('req', req);
-  console.log('user', user);
 
   try {
     const body = await req.json();
@@ -23,9 +24,11 @@ export const POST = async (req: NextRequest) => {
 
     const eventId = body.eventId;
     const amount = parseInt(body.amount);
+    const userId = body.userId;
+    const email = body.email;
 
-    if (!user?.id || !eventId || !amount) {
-      console.log('Missing userId, eventId or amount');
+    if (!userId || !eventId || !amount || !email) {
+      console.log('Missing userId, eventId or amount, email');
       return NextResponse.json(
         {
           error: 'Missing userId, eventId or amount',
@@ -41,14 +44,14 @@ export const POST = async (req: NextRequest) => {
     const tickets = Array.from({ length: amount }, () => {
       const payload = {
         event_id: eventId,
-        user_id: user?.id,
+        user_id: userId,
       };
 
       const token = jwt.sign(payload, secret);
 
       return {
         event_id: eventId,
-        user_id: user?.id,
+        user_id: userId,
         jwt: token,
         created_at: new Date(),
         updated_at: new Date(),
@@ -65,7 +68,11 @@ export const POST = async (req: NextRequest) => {
       .set({ tickets_sold: event[0]?.tickets_sold ? event[0]?.tickets_sold + amount : amount })
       .where(eq(Events.id, eventId));
 
-    await emailTicketsToUser(tickets, user?.email);
+    console.log('updated event');
+
+    const userName = await getUserName(userId);
+
+    await emailTicketsToUser(tickets, userName!, email!);
 
     return NextResponse.json({
       tickets,

@@ -11,7 +11,7 @@ import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 import Loader from '@components/Loader';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import TicketPDF from '@components/Email.tsx';
+import TicketPDF from '@components/PDF.tsx';
 import QRCodeGenerator from '@components/QRCodeGenerator.tsx';
 
 async function getTickets(): Promise<Ticket[] | null> {

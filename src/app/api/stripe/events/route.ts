@@ -5,6 +5,9 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const makeTicketCallToDatabase = async (eventId: string, amount: string) => {
   await fetch(`${process.env.BASE_URL}/api/ticket`, {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     body: JSON.stringify({ eventId: eventId, amount: amount }),
   });
 };

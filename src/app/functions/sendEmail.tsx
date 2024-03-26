@@ -14,7 +14,7 @@ const getEvent = async (eventId: number) => {
   return db.select().from(Events).where(eq(Events.id, eventId));
 };
 
-export const emailTicketsToUser = async (tickets: Ticket[], email?: string | null) => {
+export const emailTicketsToUser = async (tickets: any, email?: string | null) => {
   const event = await getEvent(tickets[0].event_id);
   const transporter = nodemailer.createTransport({
     service: 'Gmail',

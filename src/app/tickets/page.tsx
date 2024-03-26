@@ -61,14 +61,10 @@ function TicketComponent({ tickets, event, poss }: TicketComponentProps) {
   if (!tickets) return null;
   if (!qrCodes) return null;
 
-  console.log(new Date(event.date!), addDays(new Date(), 1));
-
   const eventHasPassed = isAfter(addDays(new Date(), 1), event.date!);
 
-  console.log(eventHasPassed);
-
   return (
-    <div className="w-screen z-20 bg-slate-950">
+    <div className="w-screen z-20 bg-slate-950 mt-24">
       <div
         className={`mx-8 md:mx-24 mt-4 text-center p-8 rounded-2xl transition-all duration-1000 animate-gradient-x bg-gradient-to-r from-blue-900 via-pink-200 to-pink-600 bg-size-200 shadow-2xl ${bgSize} ${eventHasPassed && 'opacity-50'}`}
       >

@@ -8,6 +8,10 @@ const makeTicketCallToDatabase = async (
 ) => {
   console.log('making ticket call to database');
   console.log('eventId', eventId);
+  console.log(
+    'valid json?',
+    JSON.stringify({ eventId: eventId, amount: amount, userId: userId, email: email })
+  );
   await fetch(`${process.env.BASE_URL}/api/ticket`, {
     method: 'POST',
     headers: {

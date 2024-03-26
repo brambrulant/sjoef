@@ -17,6 +17,9 @@ export const POST = async (req: NextRequest) => {
 
   const body = await req.json();
 
+  console.log('body', body);
+  console.log('user', user);
+
   const eventId = body.eventId;
   const amount = parseInt(body.amount);
 
